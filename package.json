@@ -19,6 +19,7 @@
     "liquidjs": "^10.17.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-icons": "^5.3.0",
     "uuid": "^10.0.0"
   },
   "devDependencies": {
