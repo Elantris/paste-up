@@ -1,5 +1,6 @@
 import { AddIcon } from "@chakra-ui/icons"
 import {
+  Badge,
   Button,
   ButtonGroup,
   Divider,
@@ -17,65 +18,72 @@ import ProjectContext from "./ProjectContext"
 import SortingModal from "./SortingModal"
 import { CardTemplateProps } from "./types"
 
-const CardTemplateForm = () => {
+const CardTemplateSection = () => {
   const {
     project,
-    handleProjectChange,
     createCardTemplate,
-    updateCardTemplate,
-    removeCardTemplate,
+    editListSorting,
+    updateListItem,
+    removeListItem,
   } = useContext(ProjectContext)
 
   const [selectedSorting, setSelectedSorting] = useState<number>(-1)
   const [selectedCardTemplate, setSelectedCardTemplate] =
     useState<CardTemplateProps | null>(null)
-  const [isSortingModalOpen, setIsSortingModalOpen] = useState(false)
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [activeModalKey, setActiveModalKey] = useState("")
 
   if (!project) {
     return <Loading />
   }
 
-  const handleEditSorting = (newSorting: number) => {
-    const targetCardTemplate = { ...project.cardTemplates[selectedSorting] }
-    const newCardTemplates = project.cardTemplates.filter(
-      (_, index) => index !== selectedSorting,
-    )
-    newCardTemplates.splice(newSorting, 0, targetCardTemplate)
-    handleProjectChange?.({ cardTemplates: newCardTemplates })
-    setIsSortingModalOpen(false)
-  }
-
   return (
     <Stack bg="gray.600" p="1rem">
-      <Heading size="lg" color="blue.300" userSelect="none">
+      <Heading size="md" color="blue.300" userSelect="none">
         Card Templates
       </Heading>
 
       <Divider />
 
       {project.cardTemplates.map((cardTemplate, index) => (
-        <HStack key={cardTemplate.id} role="group">
+        <HStack key={cardTemplate.id} role="group" position="relative">
           <Button
             flexShrink={0}
             variant="ghost"
             size="sm"
             onClick={() => {
               setSelectedSorting(index)
-              setIsSortingModalOpen(true)
+              setActiveModalKey("SORTING")
             }}
           >
             {index + 1}
           </Button>
 
-          <Heading as="h3" size="sm" flexGrow={1} noOfLines={1}>
+          <Heading as="h3" size="sm" noOfLines={1} flexGrow={1}>
             {cardTemplate.name}
           </Heading>
+
+          <Badge
+            flexShrink={0}
+            maxW="5rem"
+            overflow="hidden"
+            textOverflow="ellipsis"
+            textTransform="none"
+          >
+            {
+              project.cardInstances.filter(
+                (cardInstance) =>
+                  cardInstance.cardTemplateId === cardTemplate.id,
+              ).length
+            }
+          </Badge>
 
           <ButtonGroup
             size="sm"
             display="none"
             _groupHover={{ display: "flex" }}
+            position="absolute"
+            right="0"
+            bg="gray.600"
           >
             <Tooltip label="Copy" placement="top">
               <IconButton
@@ -88,9 +96,10 @@ const CardTemplateForm = () => {
               <IconButton
                 aria-label="edit"
                 icon={<FaPencil />}
+                colorScheme="blue"
                 onClick={() => {
                   setSelectedCardTemplate(cardTemplate)
-                  setIsEditModalOpen(true)
+                  setActiveModalKey("EDITING")
                 }}
               />
             </Tooltip>
@@ -107,23 +116,28 @@ const CardTemplateForm = () => {
       </Button>
 
       <SortingModal
-        isOpen={isSortingModalOpen}
-        onClose={() => setIsSortingModalOpen(false)}
+        isOpen={activeModalKey === "SORTING"}
+        onClose={() => setActiveModalKey("")}
         value={selectedSorting}
-        onChange={(newSorting) => handleEditSorting(newSorting)}
+        onChange={(newSorting) => {
+          editListSorting?.("cardTemplates", selectedSorting, newSorting)
+          setActiveModalKey("")
+        }}
       />
 
       <CardTemplateEditModal
-        isOpen={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
+        isOpen={activeModalKey === "EDITING"}
+        onClose={() => setActiveModalKey("")}
         cardTemplate={selectedCardTemplate}
-        onDelete={(cardTemplateId) => removeCardTemplate?.(cardTemplateId)}
+        onDelete={(cardTemplateId) =>
+          removeListItem?.("cardTemplates", cardTemplateId)
+        }
         onSave={(cardTemplateId, updates) =>
-          updateCardTemplate?.(cardTemplateId, updates)
+          updateListItem?.("cardTemplates", cardTemplateId, updates)
         }
       />
     </Stack>
   )
 }
 
-export default CardTemplateForm
+export default CardTemplateSection

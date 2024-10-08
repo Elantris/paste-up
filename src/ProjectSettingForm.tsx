@@ -2,6 +2,7 @@ import {
   Button,
   Divider,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   Heading,
   HStack,
@@ -16,7 +17,9 @@ const ProjectSettingForm = () => {
   const { project, handleProjectChange } = useContext(ProjectContext)
   const nameRef = useRef<HTMLInputElement>(null)
   const pageClassNameRef = useRef<HTMLInputElement>(null)
-  const [isNameInvalid, setIsNameInvalid] = useState(false)
+  const [validationErrors, setValidationErrors] = useState<
+    Record<string, string>
+  >({})
 
   if (!project) {
     return <Loading />
@@ -30,10 +33,15 @@ const ProjectSettingForm = () => {
       pageClassNameRef.current.value = project.pageClassName
     }
   }
+
   const handleSave = () => {
+    if (Object.values(validationErrors).filter((v) => v).length) {
+      return
+    }
+
     const name = nameRef.current?.value
     if (!name) {
-      setIsNameInvalid(true)
+      setValidationErrors((prev) => ({ ...prev, name: "Name is required." }))
       return
     }
 
@@ -45,25 +53,31 @@ const ProjectSettingForm = () => {
 
   return (
     <Stack bg="gray.600" p="1rem" userSelect="none">
-      <Heading size="lg" color="blue.300">
+      <Heading size="md" color="blue.300">
         Project Setting
       </Heading>
 
       <Divider />
 
-      <FormControl>
+      <FormControl isInvalid={!!validationErrors.name}>
         <FormLabel>Name</FormLabel>
         <Input
           ref={nameRef}
           defaultValue={project.name}
-          errorBorderColor="red.300"
-          isInvalid={isNameInvalid}
-          onFocus={() => isNameInvalid && setIsNameInvalid(false)}
+          onFocus={() =>
+            validationErrors.name &&
+            setValidationErrors((prev) => ({ ...prev, name: "" }))
+          }
         />
+        <FormErrorMessage>{validationErrors.name}</FormErrorMessage>
       </FormControl>
       <FormControl>
         <FormLabel>Page Class Name</FormLabel>
-        <Input ref={pageClassNameRef} defaultValue={project.pageClassName} />
+        <Input
+          ref={pageClassNameRef}
+          defaultValue={project.pageClassName}
+          className="font-mono"
+        />
       </FormControl>
 
       <HStack justify="flex-end">

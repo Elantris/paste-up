@@ -1,32 +1,39 @@
 import { createContext, FC, ReactNode, useEffect, useState } from "react"
 import { v4 as uuidv4 } from "uuid"
-import { CardInstanceProps, CardTemplateProps, ProjectProps } from "./types"
-import { getMaxIndex } from "./utils"
+import {
+  CardInstanceProps,
+  CardTemplateProps,
+  ListType,
+  ProjectProps,
+} from "./types"
 
 const defaultProject: ProjectProps = {
   id: uuidv4(),
   name: "Untitled Project",
-  pageClassName: "",
+  pageClassName: "w-[210mm] h-fit min-h-[297mm] p-[0.39in] bg-white text-black",
   cardTemplates: [],
   cardInstances: [],
 }
+const defaultCardTemplateContent = `
+<div class="w-[63mm] min-h-[30mm] border border-black text-center text-[8pt]">
+  <div class="text-[12pt] font-bold">{{title}}</div>
+  <div>{{body}}</div>
+</div>
+`.trim()
 
 type ProjectContextProps = {
   project: ProjectProps | null
   handleProjectChange?: (updates: Partial<ProjectProps>) => void
-  importProject?: () => void
-  exportProject?: () => void
 
   createCardTemplate?: (cardTemplateId?: string) => void
-  updateCardTemplate?: (
-    cardTemplateId: string,
-    updates: Partial<CardTemplateProps>,
+  createCardInstance?: (cardInstance: Omit<CardInstanceProps, "id">) => void
+  editListSorting?: (listType: ListType, from: number, to: number) => void
+  updateListItem?: (
+    ListType: ListType,
+    id: string,
+    updates: Partial<CardTemplateProps | CardInstanceProps>,
   ) => void
-  removeCardTemplate?: (cardTemplateId: string) => void
-
-  createCardInstance?: () => void
-  updateCardInstance?: (cardInstance: Partial<CardInstanceProps>) => void
-  removeCardInstance?: (cardInstanceId: string) => void
+  removeListItem?: (listType: ListType, id: string) => void
 }
 
 const ProjectContext = createContext<ProjectContextProps>({
@@ -65,48 +72,68 @@ export const ProjectProvider: FC<{
         )
       : null
 
-    const maxIndex = getMaxIndex(
-      project?.cardTemplates.map((cardTemplate) => cardTemplate.name) || [],
-      targetCardTemplate
-        ? new RegExp(`^${targetCardTemplate.name} (\\d+)$`)
-        : /^Untitled (\d+)$/,
-    )
-
-    const newCardTemplate: CardTemplateProps = targetCardTemplate
-      ? {
-          id: uuidv4(),
-          name: `${targetCardTemplate.name} ${maxIndex + 1}`,
-          content: targetCardTemplate.content,
-        }
-      : {
-          id: uuidv4(),
-          name: `Untitled ${maxIndex + 1}`,
-          content: "<div></div>",
-        }
+    const newCardTemplate: CardTemplateProps = {
+      id: uuidv4(),
+      name: targetCardTemplate?.name || "Untitled",
+      content: targetCardTemplate?.content || defaultCardTemplateContent,
+    }
 
     handleProjectChange({
       cardTemplates: [...(project?.cardTemplates || []), newCardTemplate],
     })
   }
-  const updateCardTemplate: ProjectContextProps["updateCardTemplate"] = (
-    cardTemplateId,
+
+  const createCardInstance: ProjectContextProps["createCardInstance"] = (
+    cardInstance,
+  ) => {
+    const newCardInstance: CardInstanceProps = {
+      ...cardInstance,
+      id: uuidv4(),
+    }
+
+    handleProjectChange({
+      cardInstances: [...(project?.cardInstances || []), newCardInstance],
+    })
+  }
+
+  const editListSorting: ProjectContextProps["editListSorting"] = (
+    listType,
+    from,
+    to,
+  ) => {
+    const target = project?.[listType]?.[from]
+    if (!target) {
+      return
+    }
+    const newList = project[listType].filter((_, index) => index !== from)
+    newList.splice(to, 0, target)
+    handleProjectChange({ [listType]: newList })
+  }
+
+  const updateListItem: ProjectContextProps["updateListItem"] = (
+    listType,
+    id,
     updates,
   ) => {
+    if (!project?.[listType]) {
+      return
+    }
     handleProjectChange({
-      cardTemplates: project?.cardTemplates.map((cardTemplate) =>
-        cardTemplate.id === cardTemplateId
-          ? Object.assign({}, cardTemplate, updates)
-          : cardTemplate,
+      [listType]: project[listType].map((item) =>
+        item.id === id ? Object.assign({}, item, updates) : item,
       ),
     })
   }
-  const removeCardTemplate: ProjectContextProps["removeCardTemplate"] = (
-    cardTemplateId,
+
+  const removeListItem: ProjectContextProps["removeListItem"] = (
+    listType,
+    id,
   ) => {
+    if (!project?.[listType]) {
+      return
+    }
     handleProjectChange({
-      cardTemplates: project?.cardTemplates.filter(
-        (cardTemplate) => cardTemplate.id !== cardTemplateId,
-      ),
+      [listType]: project[listType].filter((item) => item.id !== id),
     })
   }
 
@@ -116,8 +143,10 @@ export const ProjectProvider: FC<{
         project,
         handleProjectChange,
         createCardTemplate,
-        updateCardTemplate,
-        removeCardTemplate,
+        createCardInstance,
+        editListSorting,
+        updateListItem,
+        removeListItem,
       }}
     >
       {children}

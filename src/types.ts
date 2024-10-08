@@ -6,6 +6,8 @@ export type ProjectProps = {
   cardInstances: CardInstanceProps[]
 }
 
+export type ListType = "cardTemplates" | "cardInstances"
+
 export type CardTemplateProps = {
   id: string
   name: string

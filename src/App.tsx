@@ -4,7 +4,7 @@ import ProjectPreview from "./ProjectPreview"
 
 function App() {
   return (
-    <Flex direction="column" h="100vh" w="100vw" minW="800px" margin="0 auto">
+    <Flex id="app" direction="column" h="100vh" w="100vw" margin="0 auto">
       <HStack as="header" height="4rem" bg="gray.700">
         <Flex
           align="center"
@@ -14,18 +14,32 @@ function App() {
           bg="gray.900"
           cursor="pointer"
         >
-          <Image src="/label.png" alt="logo" width="2rem" />
+          <Image src="label.png" alt="logo" width="2rem" />
         </Flex>
 
         <Heading as="h1">Paste Up!</Heading>
       </HStack>
 
       <Flex grow={1} overflow="hidden">
-        <Flex shrink={0} direction="column" w="360px" overflow="hidden">
+        <Flex
+          as="aside"
+          shrink={0}
+          direction="column"
+          w="360px"
+          overflow="hidden"
+          bg="gray.800"
+        >
           <ProjectEditor />
         </Flex>
 
-        <Flex grow={1} justify="center" p="1rem" overflowY="auto">
+        <Flex
+          as="main"
+          flexGrow={1}
+          justifyContent="center"
+          p="1rem"
+          overflow="auto"
+          bg="gray.900"
+        >
           <ProjectPreview />
         </Flex>
       </Flex>

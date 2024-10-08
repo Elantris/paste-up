@@ -1,12 +1,10 @@
 import {
+  Box,
   Button,
   ButtonGroup,
-  Code,
   FormControl,
-  FormHelperText,
+  FormErrorMessage,
   FormLabel,
-  HStack,
-  IconButton,
   Input,
   Modal,
   ModalBody,
@@ -16,74 +14,73 @@ import {
   ModalHeader,
   ModalOverlay,
   Stack,
-  Textarea,
   Tooltip,
-  useClipboard,
 } from "@chakra-ui/react"
+import { html as htmlLanguage } from "@codemirror/lang-html"
+import { materialDark } from "@uiw/codemirror-theme-material"
+import ReactCodeMirror from "@uiw/react-codemirror"
 import html from "prettier/plugins/html"
 import prettier from "prettier/standalone"
-import { FC, useRef, useState } from "react"
-import { FaClipboard } from "react-icons/fa6"
+import { FC, useContext, useEffect, useRef, useState } from "react"
+import ProjectContext from "./ProjectContext"
 import { CardTemplateProps } from "./types"
-import { isHTML } from "./utils"
 
 const CardTemplateEditModal: FC<{
   isOpen: boolean
   onClose: () => void
-  cardTemplate: CardTemplateProps | null
+  cardTemplate?: CardTemplateProps | null
   onDelete?: (cardTemplateId: string) => void
   onSave?: (cardTemplateId: string, updates: Partial<CardTemplateProps>) => void
 }> = ({ isOpen, onClose, cardTemplate, onDelete, onSave }) => {
-  const { onCopy, setValue } = useClipboard("")
+  const { project } = useContext(ProjectContext)
 
   const nameRef = useRef<HTMLInputElement>(null)
-  const contentRef = useRef<HTMLTextAreaElement>(null)
-  const deleteRef = useRef<HTMLInputElement>(null)
+  const [content, setContent] = useState(cardTemplate?.content || "")
 
   const [isDeleting, setIsDeleting] = useState(false)
-  const [isDeleteInvalid, setIsDeleteInvalid] = useState(false)
-  const [isNameInvalid, setIsNameInvalid] = useState(false)
-  const [isContentInvalid, setIsContentInvalid] = useState(false)
+  const [validationErrors, setValidationErrors] = useState<
+    Record<string, string>
+  >({})
+
+  const childInstanceCount =
+    project?.cardInstances.filter(
+      (cardInstance) => cardInstance.cardTemplateId === cardTemplate?.id,
+    )?.length || 0
+
+  useEffect(() => {
+    if (cardTemplate) {
+      setContent(cardTemplate.content)
+    }
+  }, [cardTemplate])
 
   const handleFormat = async () => {
-    if (!contentRef.current) {
-      return
-    }
     try {
-      const formattedContent = await prettier.format(contentRef.current.value, {
+      const formattedContent = await prettier.format(content, {
         parser: "html",
         plugins: [html],
       })
-
-      contentRef.current.value = formattedContent
+      setContent(formattedContent)
     } catch {
-      setIsContentInvalid(true)
+      setValidationErrors((prev) => ({
+        ...prev,
+        content: "Invalid HTML structure.",
+      }))
       return
     }
   }
 
   const handleClose = () => {
     setIsDeleting(false)
-    setIsDeleteInvalid(false)
-    setIsNameInvalid(false)
-    setIsContentInvalid(false)
+    setValidationErrors({})
     onClose()
   }
 
   const handleDelete = () => {
-    if (!cardTemplate) {
+    if (!cardTemplate || childInstanceCount) {
       return
     }
-
-    setValue(cardTemplate.id)
-
     if (!isDeleting) {
       setIsDeleting(true)
-      return
-    }
-
-    if (deleteRef.current?.value !== cardTemplate.id) {
-      setIsDeleteInvalid(true)
       return
     }
 
@@ -92,18 +89,24 @@ const CardTemplateEditModal: FC<{
   }
 
   const handleSave = async () => {
-    if (!cardTemplate || isNameInvalid || isContentInvalid) {
+    if (
+      !cardTemplate ||
+      Object.values(validationErrors).filter((v) => v).length
+    ) {
       return
     }
 
     const name = nameRef.current?.value || ""
-    const content = contentRef.current?.value || ""
     if (!name) {
-      setIsNameInvalid(true)
+      setValidationErrors((prev) => ({ ...prev, name: "Name is required." }))
       return
     }
-    if (!content || !isHTML(content)) {
-      setIsContentInvalid(true)
+
+    if (!content) {
+      setValidationErrors((prev) => ({
+        ...prev,
+        content: "Content is required.",
+      }))
       return
     }
 
@@ -120,58 +123,55 @@ const CardTemplateEditModal: FC<{
 
         <ModalBody>
           <Stack>
-            <FormControl>
+            <FormControl isInvalid={!!validationErrors.name}>
               <FormLabel>Name</FormLabel>
               <Input
                 ref={nameRef}
                 defaultValue={cardTemplate?.name}
-                errorBorderColor="red.300"
-                isInvalid={isNameInvalid}
-                onFocus={() => isNameInvalid && setIsNameInvalid(false)}
+                onFocus={() =>
+                  validationErrors.name &&
+                  setValidationErrors((prev) => ({ ...prev, name: "" }))
+                }
               />
-            </FormControl>
-            <FormControl>
-              <FormLabel>Content</FormLabel>
-              <Textarea
-                ref={contentRef}
-                defaultValue={cardTemplate?.content}
-                errorBorderColor="red.300"
-                isInvalid={isContentInvalid}
-                onFocus={() => isContentInvalid && setIsContentInvalid(false)}
-                onBlur={() => handleFormat()}
-                minH="10rem"
-              />
+              <FormErrorMessage>{validationErrors.name}</FormErrorMessage>
             </FormControl>
 
-            <FormControl display={isDeleting ? "block" : "none"}>
-              <FormLabel color="red.300">Enter the card template ID</FormLabel>
-              <Input
-                ref={deleteRef}
-                errorBorderColor="red.300"
-                isInvalid={isDeleteInvalid}
-                onFocus={() => isDeleteInvalid && setIsDeleteInvalid(false)}
-              />
-              <FormHelperText>
-                <HStack>
-                  <Code colorScheme="red">{cardTemplate?.id}</Code>
-                  <Tooltip label="Copy to clipboard.">
-                    <IconButton
-                      aria-label="Clipboard"
-                      icon={<FaClipboard />}
-                      size="sm"
-                      onClick={() => onCopy()}
-                    />
-                  </Tooltip>
-                </HStack>
-              </FormHelperText>
+            <FormControl isInvalid={!!validationErrors.content}>
+              <FormLabel>Content</FormLabel>
+              <Box minH="15rem">
+                <ReactCodeMirror
+                  height="15rem"
+                  theme={materialDark}
+                  extensions={[htmlLanguage({})]}
+                  value={content}
+                  onChange={(value) => setContent(value)}
+                  onFocus={() =>
+                    setValidationErrors((prev) => ({ ...prev, content: "" }))
+                  }
+                  onBlur={() => handleFormat()}
+                />
+              </Box>
+              <FormErrorMessage>{validationErrors.content}</FormErrorMessage>
             </FormControl>
           </Stack>
         </ModalBody>
 
         <ModalFooter justifyContent="space-between">
-          <Button colorScheme="red" onClick={() => handleDelete()}>
-            {isDeleting ? "Confirm" : "Delete"}
-          </Button>
+          {childInstanceCount ? (
+            <Tooltip
+              label={`dependencies (${childInstanceCount})`}
+              placement="right"
+            >
+              <Button colorScheme="red" disabled>
+                Delete
+              </Button>
+            </Tooltip>
+          ) : (
+            <Button colorScheme="red" onClick={() => handleDelete()}>
+              {isDeleting ? "Confirm Delete" : "Delete"}
+            </Button>
+          )}
+
           <ButtonGroup>
             <Button onClick={() => handleClose()}>Cancel</Button>
             <Button colorScheme="blue" onClick={() => handleSave()}>
