@@ -1,12 +1,17 @@
 import { Box } from "@chakra-ui/react"
-import { Fragment, useContext } from "react"
+import { FC, Fragment, useContext } from "react"
 import ProjectContext from "./ProjectContext"
 
-function ProjectPreview() {
+const ProjectPreview: FC<{
+  type: "screen" | "print"
+}> = ({ type }) => {
   const { project, renderedCards } = useContext(ProjectContext)
 
   return (
-    <Box id="page" className={project?.pageClassName}>
+    <Box
+      id={type === "screen" ? "page-screen" : "page-print"}
+      className={project?.pageClassName}
+    >
       {renderedCards
         .filter((card) => card.content && !card.isHidden)
         .map((card) => (

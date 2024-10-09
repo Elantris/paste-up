@@ -12,7 +12,7 @@ import {
 const defaultProject: ProjectProps = {
   id: uuidv4(),
   name: "Untitled Project",
-  pageClassName: "w-[210mm] h-fit min-h-[297mm] p-[0.39in] bg-white text-black",
+  pageClassName: "",
   cardTemplates: [],
   cardInstances: [],
 }
