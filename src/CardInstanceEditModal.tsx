@@ -124,6 +124,7 @@ const CardInstanceEditModal: FC<{
       cardTemplateId,
       attributes: JSON.parse(attributes),
       amount,
+      isHidden: cardInstance?.isHidden ?? false,
     })
     handleClose()
   }
@@ -141,7 +142,7 @@ const CardInstanceEditModal: FC<{
               <FormLabel>Name</FormLabel>
               <Input
                 ref={nameRef}
-                defaultValue={cardInstance?.name}
+                defaultValue={cardInstance?.name || "Untitled"}
                 onFocus={() =>
                   validationErrors.name &&
                   setValidationErrors((prev) => ({ ...prev, name: "" }))

@@ -1,3 +1,4 @@
+import mustache from "mustache"
 import { createContext, FC, ReactNode, useEffect, useState } from "react"
 import { v4 as uuidv4 } from "uuid"
 import {
@@ -5,6 +6,7 @@ import {
   CardTemplateProps,
   ListType,
   ProjectProps,
+  RenderedCardsProps,
 } from "./types"
 
 const defaultProject: ProjectProps = {
@@ -34,16 +36,56 @@ type ProjectContextProps = {
     updates: Partial<CardTemplateProps | CardInstanceProps>,
   ) => void
   removeListItem?: (listType: ListType, id: string) => void
+  renderedCards: RenderedCardsProps[]
 }
 
 const ProjectContext = createContext<ProjectContextProps>({
   project: null,
+  renderedCards: [],
 })
 
 export const ProjectProvider: FC<{
   children: ReactNode
 }> = ({ children }) => {
   const [project, setProject] = useState<ProjectProps | null>(null)
+
+  const renderedCards =
+    project?.cardInstances.reduce<RenderedCardsProps[]>(
+      (prev, cardInstance) => {
+        const cardTemplate = project?.cardTemplates.find(
+          (cardTemplate) => cardTemplate.id === cardInstance.cardTemplateId,
+        )
+        if (!cardTemplate || !cardInstance.amount) {
+          return prev
+        }
+
+        try {
+          return [
+            ...prev,
+            {
+              cardInstanceId: cardInstance.id,
+              content: mustache.render(
+                cardTemplate.content,
+                cardInstance.attributes,
+              ),
+              amount: cardInstance.amount,
+              isHidden: cardInstance.isHidden,
+            },
+          ]
+        } catch {
+          return [
+            ...prev,
+            {
+              cardInstanceId: cardInstance.id,
+              content: "",
+              amount: 0,
+              isError: true,
+            },
+          ]
+        }
+      },
+      [],
+    ) || []
 
   useEffect(() => {
     const raw = localStorage.getItem("project") || ""
@@ -147,6 +189,7 @@ export const ProjectProvider: FC<{
         editListSorting,
         updateListItem,
         removeListItem,
+        renderedCards,
       }}
     >
       {children}

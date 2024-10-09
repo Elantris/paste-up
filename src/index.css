@@ -14,7 +14,7 @@
     left: 0;
     print-color-adjust: exact !important;
 
-    >div {
+    > div {
       break-inside: avoid !important;
     }
   }
@@ -22,4 +22,8 @@
 
 main {
   font-family: "Noto Sans", sans-serif;
+}
+
+#page {
+  margin: 0 auto;
 }

@@ -11,7 +11,7 @@ import {
   Tooltip,
 } from "@chakra-ui/react"
 import { useContext, useState } from "react"
-import { FaCopy, FaPencil } from "react-icons/fa6"
+import { FaCopy, FaPencil, FaRegEye, FaRegEyeSlash } from "react-icons/fa6"
 import CardInstanceEditModal from "./CardInstanceEditModal"
 import Loading from "./Loading"
 import ProjectContext from "./ProjectContext"
@@ -25,6 +25,7 @@ const CardInstanceSection = () => {
     editListSorting,
     updateListItem,
     removeListItem,
+    renderedCards,
   } = useContext(ProjectContext)
 
   const [selectedSorting, setSelectedSorting] = useState<number>(-1)
@@ -45,7 +46,12 @@ const CardInstanceSection = () => {
       <Divider />
 
       {project.cardInstances.map((cardInstance, index) => (
-        <HStack key={cardInstance.id} role="group" position="relative">
+        <HStack
+          key={cardInstance.id}
+          role="group"
+          position="relative"
+          opacity={cardInstance.isHidden ? "0.5" : undefined}
+        >
           <Button
             flexShrink={0}
             variant="ghost"
@@ -58,7 +64,19 @@ const CardInstanceSection = () => {
             {index + 1}
           </Button>
 
-          <Heading as="h3" size="sm" noOfLines={1} flexGrow={1}>
+          <Heading
+            as="h3"
+            size="sm"
+            noOfLines={1}
+            flexGrow={1}
+            color={
+              renderedCards.find(
+                (v) => v.cardInstanceId === cardInstance.id && v.isError,
+              )
+                ? "red.300"
+                : undefined
+            }
+          >
             {cardInstance.name}
           </Heading>
 
@@ -85,6 +103,17 @@ const CardInstanceSection = () => {
             right="0"
             bg="gray.600"
           >
+            <Tooltip label="Show/Hide" placement="top">
+              <IconButton
+                aria-label="visibility"
+                icon={cardInstance.isHidden ? <FaRegEye /> : <FaRegEyeSlash />}
+                onClick={() =>
+                  updateListItem?.("cardInstances", cardInstance.id, {
+                    isHidden: !cardInstance.isHidden,
+                  })
+                }
+              />
+            </Tooltip>
             <Tooltip label="Copy" placement="top">
               <IconButton
                 aria-label="copy"

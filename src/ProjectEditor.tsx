@@ -4,7 +4,7 @@ import CardInstanceSection from "./CardInstanceSection"
 import CardTemplateSection from "./CardTemplateSection"
 import Loading from "./Loading"
 import ProjectContext from "./ProjectContext"
-import ProjectSettingForm from "./ProjectSettingForm"
+import ProjectSettingSection from "./ProjectSettingSection"
 
 function ProjectEditor() {
   const fileRef = useRef<HTMLInputElement>(null)
@@ -69,7 +69,7 @@ function ProjectEditor() {
           <Loading />
         ) : (
           <Flex direction="column" gap="1rem">
-            <ProjectSettingForm />
+            <ProjectSettingSection />
             <CardTemplateSection />
             <CardInstanceSection />
           </Flex>

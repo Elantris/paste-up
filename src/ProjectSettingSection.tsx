@@ -13,7 +13,7 @@ import { useContext, useRef, useState } from "react"
 import Loading from "./Loading"
 import ProjectContext from "./ProjectContext"
 
-const ProjectSettingForm = () => {
+const ProjectSettingSection = () => {
   const { project, handleProjectChange } = useContext(ProjectContext)
   const nameRef = useRef<HTMLInputElement>(null)
   const pageClassNameRef = useRef<HTMLInputElement>(null)
@@ -90,4 +90,4 @@ const ProjectSettingForm = () => {
   )
 }
 
-export default ProjectSettingForm
+export default ProjectSettingSection

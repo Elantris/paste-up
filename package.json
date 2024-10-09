@@ -5,7 +5,7 @@
   "homepage": "https://elantris.github.io/paste-up/",
   "type": "module",
   "scripts": {
-    "dev": "vite --host",
+    "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",

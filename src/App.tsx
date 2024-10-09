@@ -1,4 +1,4 @@
-import { Flex, Heading, HStack, Image } from "@chakra-ui/react"
+import { Box, Flex, Heading, HStack, Image } from "@chakra-ui/react"
 import ProjectEditor from "./ProjectEditor"
 import ProjectPreview from "./ProjectPreview"
 
@@ -32,16 +32,9 @@ function App() {
           <ProjectEditor />
         </Flex>
 
-        <Flex
-          as="main"
-          flexGrow={1}
-          justifyContent="center"
-          p="1rem"
-          overflow="auto"
-          bg="gray.900"
-        >
+        <Box as="main" flexGrow={1} p="1rem" overflow="auto" bg="gray.900">
           <ProjectPreview />
-        </Flex>
+        </Box>
       </Flex>
     </Flex>
   )

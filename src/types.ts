@@ -20,4 +20,13 @@ export type CardInstanceProps = {
   cardTemplateId: string
   attributes: Record<string, string>
   amount: number
+  isHidden: boolean
+}
+
+export type RenderedCardsProps = {
+  cardInstanceId: string
+  content: string
+  amount: number
+  isHidden?: boolean
+  isError?: boolean
 }
