@@ -14,20 +14,16 @@ import {
 } from "@chakra-ui/react"
 import { FC, useRef } from "react"
 
-const SortingModal: FC<{
+const FolderEditModal: FC<{
   isOpen: boolean
   onClose: () => void
-  value: number
-  onChange: (newValue: number) => void
+  value: string
+  onChange: (newValue: string) => void
 }> = ({ isOpen, onClose, value, onChange }) => {
-  const sortingRef = useRef<HTMLInputElement>(null)
+  const nameRef = useRef<HTMLInputElement>(null)
 
   const handleSave = () => {
-    if (!sortingRef.current) {
-      return
-    }
-    const newValue = Math.max(Number(sortingRef.current?.value || 0) - 1, 0)
-    onChange(newValue)
+    onChange(nameRef.current?.value || "")
     onClose()
   }
 
@@ -35,17 +31,13 @@ const SortingModal: FC<{
     <Modal isOpen={isOpen} onClose={onClose} size="xs" isCentered>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Edit Sorting</ModalHeader>
+        <ModalHeader>Edit Folder</ModalHeader>
         <ModalCloseButton />
 
         <ModalBody>
           <FormControl>
-            <FormLabel>Move to</FormLabel>
-            <Input
-              ref={sortingRef}
-              defaultValue={`${value + 1}`}
-              onFocus={() => sortingRef.current?.select()}
-            />
+            <FormLabel>Folder Name</FormLabel>
+            <Input ref={nameRef} defaultValue={value} />
           </FormControl>
         </ModalBody>
 
@@ -62,4 +54,4 @@ const SortingModal: FC<{
   )
 }
 
-export default SortingModal
+export default FolderEditModal

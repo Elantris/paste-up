@@ -30,18 +30,18 @@ type ProjectContextProps = {
   createCardTemplate?: (cardTemplateId?: string) => void
   createCardInstance?: (cardInstance: Omit<CardInstanceProps, "id">) => void
   editListSorting?: (listType: ListType, from: number, to: number) => void
-  updateListItem?: (
+  updateListItems?: (
     ListType: ListType,
-    id: string,
-    updates: Partial<CardTemplateProps | CardInstanceProps>,
+    updates: ({ id: string } & Partial<
+      CardTemplateProps | CardInstanceProps
+    >)[],
   ) => void
-  removeListItem?: (listType: ListType, id: string) => void
-  renderedCards: RenderedCardsProps[]
+  removeListItems?: (listType: ListType, ids: string[]) => void
+  renderedCards?: RenderedCardsProps[]
 }
 
 const ProjectContext = createContext<ProjectContextProps>({
   project: null,
-  renderedCards: [],
 })
 
 export const ProjectProvider: FC<{
@@ -60,29 +60,24 @@ export const ProjectProvider: FC<{
         }
 
         try {
-          return [
-            ...prev,
-            {
-              cardInstanceId: cardInstance.id,
-              content: mustache.render(
-                cardTemplate.content,
-                cardInstance.attributes,
-              ),
-              amount: cardInstance.amount,
-              isHidden: cardInstance.isHidden,
-            },
-          ]
+          prev.push({
+            cardInstanceId: cardInstance.id,
+            content: mustache.render(
+              cardTemplate.content,
+              cardInstance.attributes,
+            ),
+            amount: cardInstance.amount,
+            isHidden: cardInstance.isHidden,
+          })
         } catch {
-          return [
-            ...prev,
-            {
-              cardInstanceId: cardInstance.id,
-              content: "",
-              amount: 0,
-              isError: true,
-            },
-          ]
+          prev.push({
+            cardInstanceId: cardInstance.id,
+            content: "",
+            amount: 0,
+            isError: true,
+          })
         }
+        return prev
       },
       [],
     ) || []
@@ -101,6 +96,13 @@ export const ProjectProvider: FC<{
     updates,
   ) => {
     const newProject = Object.assign({}, project || defaultProject, updates)
+    if (updates["cardInstances"]) {
+      newProject.cardInstances.sort(
+        (a, b) =>
+          (a.folder || "~").charCodeAt(0) - (b.folder || "~").charCodeAt(0) ||
+          a.name.localeCompare(b.name),
+      )
+    }
     setProject(newProject)
     localStorage.setItem("project", JSON.stringify(newProject))
   }
@@ -152,30 +154,38 @@ export const ProjectProvider: FC<{
     handleProjectChange({ [listType]: newList })
   }
 
-  const updateListItem: ProjectContextProps["updateListItem"] = (
+  const updateListItems: ProjectContextProps["updateListItems"] = (
     listType,
-    id,
     updates,
   ) => {
     if (!project?.[listType]) {
       return
     }
+    const updatesMap = updates.reduce<
+      Record<string, Partial<CardTemplateProps | CardInstanceProps>>
+    >((prev, update) => {
+      prev[update.id] = update
+      return prev
+    }, {})
     handleProjectChange({
       [listType]: project[listType].map((item) =>
-        item.id === id ? Object.assign({}, item, updates) : item,
+        updatesMap[item.id]
+          ? Object.assign({}, item, updatesMap[item.id])
+          : item,
       ),
     })
   }
 
-  const removeListItem: ProjectContextProps["removeListItem"] = (
+  const removeListItems: ProjectContextProps["removeListItems"] = (
     listType,
-    id,
+    ids,
   ) => {
     if (!project?.[listType]) {
       return
     }
+    const idSet = new Set(ids)
     handleProjectChange({
-      [listType]: project[listType].filter((item) => item.id !== id),
+      [listType]: project[listType].filter((item) => !idSet.has(item.id)),
     })
   }
 
@@ -187,8 +197,8 @@ export const ProjectProvider: FC<{
         createCardTemplate,
         createCardInstance,
         editListSorting,
-        updateListItem,
-        removeListItem,
+        updateListItems,
+        removeListItems,
         renderedCards,
       }}
     >

@@ -30,7 +30,7 @@ const CardTemplateEditModal: FC<{
   onClose: () => void
   cardTemplate?: CardTemplateProps | null
   onDelete?: (cardTemplateId: string) => void
-  onSave?: (cardTemplateId: string, updates: Partial<CardTemplateProps>) => void
+  onSave?: (update: { id: string } & Partial<CardTemplateProps>) => void
 }> = ({ isOpen, onClose, cardTemplate, onDelete, onSave }) => {
   const { project } = useContext(ProjectContext)
 
@@ -110,7 +110,11 @@ const CardTemplateEditModal: FC<{
       return
     }
 
-    onSave?.(cardTemplate.id, { name, content })
+    onSave?.({
+      id: cardTemplate.id,
+      name,
+      content,
+    })
     handleClose()
   }
 

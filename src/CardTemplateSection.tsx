@@ -23,8 +23,8 @@ const CardTemplateSection = () => {
     project,
     createCardTemplate,
     editListSorting,
-    updateListItem,
-    removeListItem,
+    updateListItems,
+    removeListItems,
   } = useContext(ProjectContext)
 
   const [selectedSorting, setSelectedSorting] = useState<number>(-1)
@@ -119,10 +119,9 @@ const CardTemplateSection = () => {
         isOpen={activeModalKey === "SORTING"}
         onClose={() => setActiveModalKey("")}
         value={selectedSorting}
-        onChange={(newSorting) => {
-          editListSorting?.("cardTemplates", selectedSorting, newSorting)
-          setActiveModalKey("")
-        }}
+        onChange={(newValue) =>
+          editListSorting?.("cardTemplates", selectedSorting, newValue)
+        }
       />
 
       <CardTemplateEditModal
@@ -130,11 +129,9 @@ const CardTemplateSection = () => {
         onClose={() => setActiveModalKey("")}
         cardTemplate={selectedCardTemplate}
         onDelete={(cardTemplateId) =>
-          removeListItem?.("cardTemplates", cardTemplateId)
+          removeListItems?.("cardTemplates", [cardTemplateId])
         }
-        onSave={(cardTemplateId, updates) =>
-          updateListItem?.("cardTemplates", cardTemplateId, updates)
-        }
+        onSave={(update) => updateListItems?.("cardTemplates", [update])}
       />
     </Stack>
   )

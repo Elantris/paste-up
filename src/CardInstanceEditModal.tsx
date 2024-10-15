@@ -4,7 +4,9 @@ import {
   ButtonGroup,
   FormControl,
   FormErrorMessage,
+  FormHelperText,
   FormLabel,
+  HStack,
   Input,
   Modal,
   ModalBody,
@@ -20,6 +22,7 @@ import {
   NumberInputStepper,
   Select,
   Stack,
+  Tag,
 } from "@chakra-ui/react"
 import { json } from "@codemirror/lang-json"
 import { materialDark } from "@uiw/codemirror-theme-material"
@@ -31,13 +34,14 @@ import { CardInstanceProps } from "./types"
 const CardInstanceEditModal: FC<{
   isOpen: boolean
   onClose: () => void
-  cardInstance?: CardInstanceProps | null
+  cardInstance: CardInstanceProps | null
   onDelete?: (cardTemplateId: string) => void
-  onSave?: (updates: CardInstanceProps) => void
+  onSave?: (update: CardInstanceProps) => void
 }> = ({ isOpen, onClose, cardInstance, onDelete, onSave }) => {
   const { project } = useContext(ProjectContext)
 
   const nameRef = useRef<HTMLInputElement>(null)
+  const folderRef = useRef<HTMLInputElement>(null)
   const cardTemplateIdRef = useRef<HTMLSelectElement>(null)
   const [attributes, setAttributes] = useState(
     JSON.stringify(cardInstance?.attributes || {}),
@@ -48,6 +52,14 @@ const CardInstanceEditModal: FC<{
   const [validationErrors, setValidationErrors] = useState<
     Record<string, string>
   >({})
+
+  const folderNames =
+    project?.cardInstances.reduce<Set<string>>((prev, cardInstance) => {
+      if (cardInstance.folder) {
+        prev.add(cardInstance.folder)
+      }
+      return prev
+    }, new Set()) || new Set()
 
   useEffect(() => {
     setAttributes(
@@ -96,7 +108,8 @@ const CardInstanceEditModal: FC<{
       return
     }
 
-    const name = nameRef.current?.value || ""
+    const name = nameRef.current?.value.trim().replace(/\s+/, " ") || ""
+    const folder = folderRef.current?.value.trim().replace(/\s+/, " ") || ""
     const cardTemplateId = cardTemplateIdRef.current?.value || ""
     const amount = Number(amountRef.current?.value || 0)
     if (!name) {
@@ -125,6 +138,7 @@ const CardInstanceEditModal: FC<{
       attributes: JSON.parse(attributes),
       amount,
       isHidden: cardInstance?.isHidden ?? false,
+      folder,
     })
     handleClose()
   }
@@ -149,6 +163,38 @@ const CardInstanceEditModal: FC<{
                 }
               />
               <FormErrorMessage>{validationErrors.name}</FormErrorMessage>
+            </FormControl>
+
+            <FormControl isInvalid={!!validationErrors.folder}>
+              <FormLabel>Folder</FormLabel>
+              <Input
+                ref={folderRef}
+                defaultValue={cardInstance?.folder || ""}
+                onFocus={() =>
+                  validationErrors.folder &&
+                  setValidationErrors((prev) => ({ ...prev, folder: "" }))
+                }
+              />
+              {!!folderNames.size && (
+                <FormHelperText>
+                  <HStack flexWrap="wrap">
+                    {Array.from(folderNames).map((folderName) => (
+                      <Tag
+                        key={folderName}
+                        cursor="pointer"
+                        onClick={() =>
+                          folderRef.current &&
+                          (folderRef.current.value = folderName)
+                        }
+                      >
+                        {folderName}
+                      </Tag>
+                    ))}
+                  </HStack>
+                </FormHelperText>
+              )}
+
+              <FormErrorMessage>{validationErrors.folder}</FormErrorMessage>
             </FormControl>
 
             <FormControl isInvalid={!!validationErrors.cardTemplateId}>
@@ -217,15 +263,17 @@ const CardInstanceEditModal: FC<{
         </ModalBody>
 
         <ModalFooter justifyContent="space-between">
-          {!!cardInstance && (
+          {cardInstance ? (
             <Button colorScheme="red" onClick={() => handleDelete()}>
               {isDeleting ? "Confirm deletion" : "Delete"}
             </Button>
+          ) : (
+            <div />
           )}
           <ButtonGroup>
             <Button onClick={() => handleClose()}>Cancel</Button>
             <Button colorScheme="blue" onClick={() => handleSave()}>
-              Save
+              {cardInstance ? "Save" : "Create"}
             </Button>
           </ButtonGroup>
         </ModalFooter>

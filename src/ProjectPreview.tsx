@@ -13,7 +13,7 @@ const ProjectPreview: FC<{
       className={project?.pageClassName}
     >
       {renderedCards
-        .filter((card) => card.content && !card.isHidden)
+        ?.filter((card) => card.content && !card.isHidden)
         .map((card) => (
           <Fragment key={card.cardInstanceId}>
             {Array.from({ length: card.amount }).map((_, index) => (
