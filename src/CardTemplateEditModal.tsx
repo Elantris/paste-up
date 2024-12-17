@@ -28,7 +28,7 @@ import { CardTemplateProps } from "./types"
 const CardTemplateEditModal: FC<{
   isOpen: boolean
   onClose: () => void
-  cardTemplate?: CardTemplateProps | null
+  cardTemplate: CardTemplateProps | null
   onDelete?: (cardTemplateId: string) => void
   onSave?: (update: { id: string } & Partial<CardTemplateProps>) => void
 }> = ({ isOpen, onClose, cardTemplate, onDelete, onSave }) => {
