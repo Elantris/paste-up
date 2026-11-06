@@ -25,6 +25,9 @@ import Loading from "./Loading"
 import ProjectContext from "./ProjectContext"
 import type { CardInstanceProps, FolderProps } from "./types"
 
+// Width of a size="sm" IconButton.
+const ICON_BUTTON_WIDTH = "2.25rem"
+
 const CardInstanceItem: FC<{
   cardInstance: CardInstanceProps
   onEdit?: (cardInstance: CardInstanceProps) => void
@@ -192,7 +195,11 @@ const CardInstanceFolder: FC<{
       </HStack>
 
       {isExpanded && (
-        <Stack ml="1rem" pl="calc(1rem - 1px)" borderStartWidth="1px">
+        <Stack
+          ms={`calc(${ICON_BUTTON_WIDTH} / 2)`}
+          ps={`calc(${ICON_BUTTON_WIDTH} / 2 - 1px)`}
+          borderStartWidth="1px"
+        >
           {folder.items.map((cardInstance) => (
             <CardInstanceItem
               key={cardInstance.id}
