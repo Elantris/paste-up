@@ -19,6 +19,7 @@ main {
   height: fit-content;
   min-height: 297mm;
   padding: 0.39in;
+  box-shadow: var(--chakra-shadows-lg);
 }
 
 #page-print {
