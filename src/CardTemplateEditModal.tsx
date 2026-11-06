@@ -2,36 +2,37 @@ import {
   Box,
   Button,
   ButtonGroup,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
+  CloseButton,
+  Dialog,
+  Field,
   Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
+  Portal,
   Stack,
-  Tooltip,
 } from "@chakra-ui/react"
 import { html as htmlLanguage } from "@codemirror/lang-html"
 import { materialDark } from "@uiw/codemirror-theme-material"
 import ReactCodeMirror from "@uiw/react-codemirror"
 import html from "prettier/plugins/html"
 import prettier from "prettier/standalone"
-import { FC, useContext, useEffect, useRef, useState } from "react"
+import { useContext, useRef, useState, type FC } from "react"
+import { Tooltip } from "./components/ui/tooltip"
 import ProjectContext from "./ProjectContext"
-import { CardTemplateProps } from "./types"
+import type { CardTemplateProps } from "./types"
 
-const CardTemplateEditModal: FC<{
-  isOpen: boolean
+type CardTemplateEditFormProps = {
   onClose: () => void
-  cardTemplate?: CardTemplateProps | null
+  cardTemplate: CardTemplateProps | null
   onDelete?: (cardTemplateId: string) => void
   onSave?: (update: { id: string } & Partial<CardTemplateProps>) => void
-}> = ({ isOpen, onClose, cardTemplate, onDelete, onSave }) => {
+}
+
+// Dialog.Content mounts on open and unmounts on close.
+const CardTemplateEditForm: FC<CardTemplateEditFormProps> = ({
+  onClose,
+  cardTemplate,
+  onDelete,
+  onSave,
+}) => {
   const { project } = useContext(ProjectContext)
 
   const nameRef = useRef<HTMLInputElement>(null)
@@ -46,12 +47,6 @@ const CardTemplateEditModal: FC<{
     project?.cardInstances.filter(
       (cardInstance) => cardInstance.cardTemplateId === cardTemplate?.id,
     )?.length || 0
-
-  useEffect(() => {
-    if (cardTemplate) {
-      setContent(cardTemplate.content)
-    }
-  }, [cardTemplate])
 
   const handleFormat = async () => {
     try {
@@ -69,12 +64,6 @@ const CardTemplateEditModal: FC<{
     }
   }
 
-  const handleClose = () => {
-    setIsDeleting(false)
-    setValidationErrors({})
-    onClose()
-  }
-
   const handleDelete = () => {
     if (!cardTemplate || childInstanceCount) {
       return
@@ -85,7 +74,7 @@ const CardTemplateEditModal: FC<{
     }
 
     onDelete?.(cardTemplate.id)
-    handleClose()
+    onClose()
   }
 
   const handleSave = async () => {
@@ -115,76 +104,110 @@ const CardTemplateEditModal: FC<{
       name,
       content,
     })
-    handleClose()
+    onClose()
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={() => handleClose()} size="xl" isCentered>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Edit Card Template</ModalHeader>
-        <ModalCloseButton />
+    <>
+      <Dialog.Header>
+        <Dialog.Title>Edit Card Template</Dialog.Title>
+      </Dialog.Header>
+      <Dialog.CloseTrigger asChild>
+        <CloseButton size="sm" />
+      </Dialog.CloseTrigger>
 
-        <ModalBody>
-          <Stack>
-            <FormControl isInvalid={!!validationErrors.name}>
-              <FormLabel>Name</FormLabel>
-              <Input
-                ref={nameRef}
-                defaultValue={cardTemplate?.name}
+      <Dialog.Body>
+        <Stack>
+          <Field.Root invalid={!!validationErrors.name}>
+            <Field.Label>Name</Field.Label>
+            <Input
+              ref={nameRef}
+              defaultValue={cardTemplate?.name}
+              onFocus={() =>
+                validationErrors.name &&
+                setValidationErrors((prev) => ({ ...prev, name: "" }))
+              }
+            />
+            <Field.ErrorText>{validationErrors.name}</Field.ErrorText>
+          </Field.Root>
+
+          <Field.Root invalid={!!validationErrors.content}>
+            <Field.Label>Content</Field.Label>
+            <Box w="full" minH="15rem">
+              <ReactCodeMirror
+                height="15rem"
+                theme={materialDark}
+                extensions={[htmlLanguage({})]}
+                value={content}
+                onChange={(value) => setContent(value)}
                 onFocus={() =>
-                  validationErrors.name &&
-                  setValidationErrors((prev) => ({ ...prev, name: "" }))
+                  setValidationErrors((prev) => ({
+                    ...prev,
+                    content: "",
+                  }))
                 }
+                onBlur={() => handleFormat()}
               />
-              <FormErrorMessage>{validationErrors.name}</FormErrorMessage>
-            </FormControl>
+            </Box>
+            <Field.ErrorText>{validationErrors.content}</Field.ErrorText>
+          </Field.Root>
+        </Stack>
+      </Dialog.Body>
 
-            <FormControl isInvalid={!!validationErrors.content}>
-              <FormLabel>Content</FormLabel>
-              <Box minH="15rem">
-                <ReactCodeMirror
-                  height="15rem"
-                  theme={materialDark}
-                  extensions={[htmlLanguage({})]}
-                  value={content}
-                  onChange={(value) => setContent(value)}
-                  onFocus={() =>
-                    setValidationErrors((prev) => ({ ...prev, content: "" }))
-                  }
-                  onBlur={() => handleFormat()}
-                />
-              </Box>
-              <FormErrorMessage>{validationErrors.content}</FormErrorMessage>
-            </FormControl>
-          </Stack>
-        </ModalBody>
-
-        <ModalFooter justifyContent="space-between">
-          {childInstanceCount ? (
-            <Tooltip
-              label={`dependencies (${childInstanceCount})`}
-              placement="right"
-            >
-              <Button colorScheme="red" disabled>
-                Delete
-              </Button>
-            </Tooltip>
-          ) : (
-            <Button colorScheme="red" onClick={() => handleDelete()}>
-              {isDeleting ? "Confirm Delete" : "Delete"}
+      <Dialog.Footer justifyContent="space-between">
+        {childInstanceCount ? (
+          <Tooltip
+            content={`dependencies (${childInstanceCount})`}
+            positioning={{
+              placement: "right",
+            }}
+          >
+            <Button colorPalette="red" disabled>
+              Delete
             </Button>
-          )}
+          </Tooltip>
+        ) : (
+          <Button colorPalette="red" onClick={() => handleDelete()}>
+            {isDeleting ? "Confirm Delete" : "Delete"}
+          </Button>
+        )}
 
-          <ButtonGroup>
-            <Button onClick={() => handleClose()}>Cancel</Button>
-            <Button colorScheme="blue" onClick={() => handleSave()}>
-              Save
-            </Button>
-          </ButtonGroup>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+        <ButtonGroup>
+          <Button variant="subtle" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button colorPalette="blue" onClick={() => handleSave()}>
+            Save
+          </Button>
+        </ButtonGroup>
+      </Dialog.Footer>
+    </>
+  )
+}
+
+const CardTemplateEditModal: FC<
+  CardTemplateEditFormProps & { isOpen: boolean }
+> = ({ isOpen, ...formProps }) => {
+  return (
+    <Dialog.Root
+      open={isOpen}
+      size="xl"
+      placement="center"
+      onOpenChange={(e) => {
+        if (!e.open) {
+          formProps.onClose()
+        }
+      }}
+    >
+      <Portal>
+        <Dialog.Backdrop />
+        <Dialog.Positioner>
+          <Dialog.Content>
+            <CardTemplateEditForm {...formProps} />
+          </Dialog.Content>
+        </Dialog.Positioner>
+      </Portal>
+    </Dialog.Root>
   )
 }
 

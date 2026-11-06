@@ -1,22 +1,22 @@
-import { AddIcon } from "@chakra-ui/icons"
 import {
   Badge,
   Button,
   ButtonGroup,
-  Divider,
   Heading,
   HStack,
   IconButton,
+  Separator,
   Stack,
-  Tooltip,
 } from "@chakra-ui/react"
 import { useContext, useState } from "react"
 import { FaCopy, FaPencil } from "react-icons/fa6"
+import { LuPlus } from "react-icons/lu"
 import CardTemplateEditModal from "./CardTemplateEditModal"
+import { Tooltip } from "./components/ui/tooltip"
 import Loading from "./Loading"
 import ProjectContext from "./ProjectContext"
 import SortingModal from "./SortingModal"
-import { CardTemplateProps } from "./types"
+import type { CardTemplateProps } from "./types"
 
 const CardTemplateSection = () => {
   const {
@@ -38,14 +38,14 @@ const CardTemplateSection = () => {
 
   return (
     <Stack bg="gray.600" p="1rem">
-      <Heading size="md" color="blue.300" userSelect="none">
+      <Heading size="xl" color="blue.300" userSelect="none">
         Card Templates
       </Heading>
 
-      <Divider />
+      <Separator />
 
       {project.cardTemplates.map((cardTemplate, index) => (
-        <HStack key={cardTemplate.id} role="group" position="relative">
+        <HStack key={cardTemplate.id} className="group" position="relative">
           <Button
             flexShrink={0}
             variant="ghost"
@@ -58,7 +58,7 @@ const CardTemplateSection = () => {
             {index + 1}
           </Button>
 
-          <Heading as="h3" size="sm" noOfLines={1} flexGrow={1}>
+          <Heading as="h3" size="md" lineClamp={1} flexGrow={1}>
             {cardTemplate.name}
           </Heading>
 
@@ -85,33 +85,43 @@ const CardTemplateSection = () => {
             right="0"
             bg="gray.600"
           >
-            <Tooltip label="Copy" placement="top">
+            <Tooltip
+              content="Copy"
+              positioning={{
+                placement: "top",
+              }}
+            >
               <IconButton
                 aria-label="copy"
-                icon={<FaCopy />}
+                variant="subtle"
                 onClick={() => createCardTemplate?.(cardTemplate.id)}
-              />
+              >
+                <FaCopy />
+              </IconButton>
             </Tooltip>
-            <Tooltip label="Edit" placement="top">
+            <Tooltip
+              content="Edit"
+              positioning={{
+                placement: "top",
+              }}
+            >
               <IconButton
                 aria-label="edit"
-                icon={<FaPencil />}
-                colorScheme="blue"
+                colorPalette="blue"
                 onClick={() => {
                   setSelectedCardTemplate(cardTemplate)
                   setActiveModalKey("EDITING")
                 }}
-              />
+              >
+                <FaPencil />
+              </IconButton>
             </Tooltip>
           </ButtonGroup>
         </HStack>
       ))}
 
-      <Button
-        leftIcon={<AddIcon />}
-        size="sm"
-        onClick={() => createCardTemplate?.()}
-      >
+      <Button size="sm" variant="subtle" onClick={() => createCardTemplate?.()}>
+        <LuPlus />
         Add
       </Button>
 

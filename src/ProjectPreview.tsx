@@ -1,5 +1,5 @@
 import { Box } from "@chakra-ui/react"
-import { FC, Fragment, useContext } from "react"
+import { Fragment, useContext, type FC } from "react"
 import ProjectContext from "./ProjectContext"
 
 const ProjectPreview: FC<{

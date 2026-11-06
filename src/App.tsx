@@ -18,7 +18,9 @@ function App() {
             <Image src="label.png" alt="logo" width="2rem" />
           </Flex>
 
-          <Heading as="h1">Paste Up!</Heading>
+          <Heading as="h1" size={{ base: "3xl", lg: "4xl" }}>
+            Paste Up!
+          </Heading>
         </HStack>
 
         <Flex grow={1} overflow="hidden">

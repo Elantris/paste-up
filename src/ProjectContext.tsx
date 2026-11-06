@@ -1,7 +1,13 @@
 import mustache from "mustache"
-import { createContext, FC, ReactNode, useEffect, useState } from "react"
-import { v4 as uuidv4 } from "uuid"
 import {
+  createContext,
+  useEffect,
+  useState,
+  type FC,
+  type ReactNode,
+} from "react"
+import { v4 as uuidv4 } from "uuid"
+import type {
   CardInstanceProps,
   CardTemplateProps,
   ListType,
@@ -22,6 +28,19 @@ const defaultCardTemplateContent = `
   <div>{{body}}</div>
 </div>
 `.trim()
+
+const compareFolderNames = (a = "", b = "") => {
+  if (a === b) {
+    return 0
+  }
+  if (!a) {
+    return 1
+  }
+  if (!b) {
+    return -1
+  }
+  return a.localeCompare(b)
+}
 
 type ProjectContextProps = {
   project: ProjectProps | null
@@ -99,7 +118,7 @@ export const ProjectProvider: FC<{
     if (updates["cardInstances"]) {
       newProject.cardInstances.sort(
         (a, b) =>
-          (a.folder || "~").charCodeAt(0) - (b.folder || "~").charCodeAt(0) ||
+          compareFolderNames(a.folder, b.folder) ||
           a.name.localeCompare(b.name),
       )
     }

@@ -1,18 +1,13 @@
 import {
   Button,
   ButtonGroup,
-  FormControl,
-  FormLabel,
+  CloseButton,
+  Dialog,
+  Field,
   Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
+  Portal,
 } from "@chakra-ui/react"
-import { FC, useRef } from "react"
+import { useRef, type FC } from "react"
 
 const FolderEditModal: FC<{
   isOpen: boolean
@@ -28,29 +23,48 @@ const FolderEditModal: FC<{
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="xs" isCentered>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Edit Folder</ModalHeader>
-        <ModalCloseButton />
+    <Dialog.Root
+      open={isOpen}
+      size="xs"
+      placement="center"
+      onOpenChange={(e) => {
+        if (!e.open) {
+          onClose()
+        }
+      }}
+    >
+      <Portal>
+        <Dialog.Backdrop />
+        <Dialog.Positioner>
+          <Dialog.Content>
+            <Dialog.Header>
+              <Dialog.Title>Edit Folder</Dialog.Title>
+            </Dialog.Header>
+            <Dialog.CloseTrigger asChild>
+              <CloseButton size="sm" />
+            </Dialog.CloseTrigger>
 
-        <ModalBody>
-          <FormControl>
-            <FormLabel>Folder Name</FormLabel>
-            <Input ref={nameRef} defaultValue={value} />
-          </FormControl>
-        </ModalBody>
+            <Dialog.Body>
+              <Field.Root>
+                <Field.Label>Folder Name</Field.Label>
+                <Input ref={nameRef} defaultValue={value} />
+              </Field.Root>
+            </Dialog.Body>
 
-        <ModalFooter>
-          <ButtonGroup>
-            <Button onClick={onClose}>Cancel</Button>
-            <Button colorScheme="blue" onClick={() => handleSave()}>
-              Save
-            </Button>
-          </ButtonGroup>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+            <Dialog.Footer>
+              <ButtonGroup>
+                <Button variant="subtle" onClick={onClose}>
+                  Cancel
+                </Button>
+                <Button colorPalette="blue" onClick={() => handleSave()}>
+                  Save
+                </Button>
+              </ButtonGroup>
+            </Dialog.Footer>
+          </Dialog.Content>
+        </Dialog.Positioner>
+      </Portal>
+    </Dialog.Root>
   )
 }
 
