@@ -6,19 +6,19 @@ function App() {
   return (
     <>
       <Flex id="app" direction="column" h="100vh" w="100vw" margin="0 auto">
-        <HStack as="header" height="4rem" bg="gray.700">
+        <HStack as="header" height="3rem" bg="gray.700">
           <Flex
             align="center"
             justify="center"
-            w="4rem"
-            h="4rem"
+            w="3rem"
+            h="3rem"
             bg="gray.900"
             cursor="pointer"
           >
-            <Image src="label.png" alt="logo" width="2rem" />
+            <Image src="label.png" alt="logo" width="1.5rem" />
           </Flex>
 
-          <Heading as="h1" size={{ base: "3xl", lg: "4xl" }}>
+          <Heading as="h1" size="2xl">
             Paste Up!
           </Heading>
         </HStack>
