@@ -29,6 +29,19 @@ const defaultCardTemplateContent = `
 </div>
 `.trim()
 
+const compareFolderNames = (a = "", b = "") => {
+  if (a === b) {
+    return 0
+  }
+  if (!a) {
+    return 1
+  }
+  if (!b) {
+    return -1
+  }
+  return a.localeCompare(b)
+}
+
 type ProjectContextProps = {
   project: ProjectProps | null
   handleProjectChange?: (updates: Partial<ProjectProps>) => void
@@ -105,7 +118,7 @@ export const ProjectProvider: FC<{
     if (updates["cardInstances"]) {
       newProject.cardInstances.sort(
         (a, b) =>
-          (a.folder || "~").charCodeAt(0) - (b.folder || "~").charCodeAt(0) ||
+          compareFolderNames(a.folder, b.folder) ||
           a.name.localeCompare(b.name),
       )
     }
