@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/paste-up/label.png" />
+    <link rel="icon" type="image/png" href="/paste-up/label.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Paste Up!</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -12,8 +12,12 @@
       rel="stylesheet"
     />
     <script src="https://cdn.tailwindcss.com"></script>
-    <script type="module" crossorigin src="/paste-up/assets/index-DS_rhylR.js"></script>
-    <link rel="stylesheet" crossorigin href="/paste-up/assets/index-BXz3JK4W.css">
+    <!-- Chakra's styles live in CSS cascade layers. -->
+    <script>
+      tailwind.config = { corePlugins: { preflight: false } }
+    </script>
+    <script type="module" crossorigin src="/paste-up/assets/index-I5v5Lg3z.js"></script>
+    <link rel="stylesheet" crossorigin href="/paste-up/assets/index-COEkFJLl.css">
   </head>
   <body>
     <div id="root"></div>
