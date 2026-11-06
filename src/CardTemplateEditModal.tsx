@@ -10,7 +10,7 @@ import {
   Stack,
 } from "@chakra-ui/react"
 import { html as htmlLanguage } from "@codemirror/lang-html"
-import { materialDark } from "@uiw/codemirror-theme-material"
+import { materialLight } from "@uiw/codemirror-theme-material"
 import ReactCodeMirror from "@uiw/react-codemirror"
 import html from "prettier/plugins/html"
 import prettier from "prettier/standalone"
@@ -136,7 +136,7 @@ const CardTemplateEditForm: FC<CardTemplateEditFormProps> = ({
             <Box w="full" minH="15rem">
               <ReactCodeMirror
                 height="15rem"
-                theme={materialDark}
+                theme={materialLight}
                 extensions={[htmlLanguage({})]}
                 value={content}
                 onChange={(value) => setContent(value)}

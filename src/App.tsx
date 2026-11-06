@@ -6,13 +6,13 @@ function App() {
   return (
     <>
       <Flex id="app" direction="column" h="100vh" w="100vw" margin="0 auto">
-        <HStack as="header" height="3rem" bg="gray.700">
+        <HStack as="header" height="3rem" bg="bg.panel" borderBottomWidth="1px">
           <Flex
             align="center"
             justify="center"
             w="3rem"
             h="3rem"
-            bg="gray.900"
+            bg="bg.muted"
             cursor="pointer"
           >
             <Image src="label.png" alt="logo" width="1.5rem" />
@@ -30,12 +30,13 @@ function App() {
             direction="column"
             w="360px"
             overflow="hidden"
-            bg="gray.800"
+            bg="bg.subtle"
+            borderEndWidth="1px"
           >
             <ProjectEditor />
           </Flex>
 
-          <Box as="main" flexGrow={1} p="1rem" overflow="auto" bg="gray.900">
+          <Box as="main" flexGrow={1} p="1rem" overflow="auto" bg="bg.muted">
             <ProjectPreview type="screen" />
           </Box>
         </Flex>

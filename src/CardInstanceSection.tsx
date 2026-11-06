@@ -63,7 +63,7 @@ const CardInstanceItem: FC<{
           renderedCards?.find(
             (v) => v.cardInstanceId === cardInstance.id && v.isError,
           )
-            ? "red.300"
+            ? "red.fg"
             : undefined
         }
       >
@@ -89,7 +89,7 @@ const CardInstanceItem: FC<{
         _groupHover={{ display: "flex" }}
         position="absolute"
         right="0"
-        bg="gray.600"
+        bg="bg.panel"
       >
         <Tooltip
           content="Copy"
@@ -163,7 +163,7 @@ const CardInstanceFolder: FC<{
             {isFolderHidden ? <FaRegEyeSlash /> : <FaRegEye />}
           </IconButton>
         </ButtonGroup>
-        <Heading as="h3" size="md" lineClamp={1} flexGrow={1} color="blue.300">
+        <Heading as="h3" size="md" lineClamp={1} flexGrow={1} color="blue.fg">
           {folder.name}
         </Heading>
         <ButtonGroup
@@ -172,7 +172,7 @@ const CardInstanceFolder: FC<{
           _groupHover={{ display: "flex" }}
           position="absolute"
           right="0"
-          bg="gray.600"
+          bg="bg.panel"
         >
           <Tooltip
             content="Edit"
@@ -192,7 +192,7 @@ const CardInstanceFolder: FC<{
       </HStack>
 
       {isExpanded && (
-        <Stack ml="1rem" pl="calc(1rem - 1px)" borderLeft="1px solid gray">
+        <Stack ml="1rem" pl="calc(1rem - 1px)" borderStartWidth="1px">
           {folder.items.map((cardInstance) => (
             <CardInstanceItem
               key={cardInstance.id}
@@ -236,8 +236,8 @@ const CardInstanceSection = () => {
     .sort((a, b) => a.name.localeCompare(b.name))
 
   return (
-    <Stack p="1rem" bg="gray.600">
-      <Heading size="xl" color="blue.300" userSelect="none">
+    <Stack bg="bg.panel" borderWidth="1px" p="1rem">
+      <Heading size="xl" color="blue.fg" userSelect="none">
         Card Instances
       </Heading>
 

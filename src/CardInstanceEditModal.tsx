@@ -14,7 +14,7 @@ import {
   Tag,
 } from "@chakra-ui/react"
 import { json } from "@codemirror/lang-json"
-import { materialDark } from "@uiw/codemirror-theme-material"
+import { materialLight } from "@uiw/codemirror-theme-material"
 import ReactCodeMirror from "@uiw/react-codemirror"
 import { useContext, useRef, useState, type FC } from "react"
 import ProjectContext from "./ProjectContext"
@@ -213,7 +213,7 @@ const CardInstanceEditForm: FC<CardInstanceEditFormProps> = ({
             <Box w="full" minH="15rem">
               <ReactCodeMirror
                 height="15rem"
-                theme={materialDark}
+                theme={materialLight}
                 extensions={[json()]}
                 value={attributes}
                 onChange={(value) => setAttributes(value)}

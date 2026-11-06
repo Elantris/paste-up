@@ -50,8 +50,8 @@ const ProjectSettingSection = () => {
   }
 
   return (
-    <Stack bg="gray.600" p="1rem" userSelect="none">
-      <Heading size="xl" color="blue.300">
+    <Stack bg="bg.panel" borderWidth="1px" p="1rem" userSelect="none">
+      <Heading size="xl" color="blue.fg">
         Project Setting
       </Heading>
 

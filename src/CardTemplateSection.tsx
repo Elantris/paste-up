@@ -37,8 +37,8 @@ const CardTemplateSection = () => {
   }
 
   return (
-    <Stack bg="gray.600" p="1rem">
-      <Heading size="xl" color="blue.300" userSelect="none">
+    <Stack bg="bg.panel" borderWidth="1px" p="1rem">
+      <Heading size="xl" color="blue.fg" userSelect="none">
         Card Templates
       </Heading>
 
@@ -83,7 +83,7 @@ const CardTemplateSection = () => {
             _groupHover={{ display: "flex" }}
             position="absolute"
             right="0"
-            bg="gray.600"
+            bg="bg.panel"
           >
             <Tooltip
               content="Copy"
