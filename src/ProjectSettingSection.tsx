@@ -12,12 +12,14 @@ import Loading from "./Loading"
 import ProjectContext from "./ProjectContext"
 
 const ProjectSettingSection = () => {
-  const { project, handleProjectChange } = useContext(ProjectContext)
+  const { project, handleProjectChange, removeProject } =
+    useContext(ProjectContext)
   const nameRef = useRef<HTMLInputElement>(null)
   const pageClassNameRef = useRef<HTMLInputElement>(null)
   const [validationErrors, setValidationErrors] = useState<
     Record<string, string>
   >({})
+  const [isDeleting, setIsDeleting] = useState(false)
 
   if (!project) {
     return <Loading />
@@ -49,6 +51,14 @@ const ProjectSettingSection = () => {
     })
   }
 
+  const handleDelete = () => {
+    if (!isDeleting) {
+      setIsDeleting(true)
+      return
+    }
+    removeProject?.(project.id)
+  }
+
   return (
     <Stack bg="bg.panel" borderWidth="1px" p="1rem" userSelect="none">
       <Heading size="xl" color="brand.fg">
@@ -78,13 +88,23 @@ const ProjectSettingSection = () => {
         />
       </Field.Root>
 
-      <HStack justify="flex-end">
-        <Button variant="subtle" onClick={() => handleReset()}>
-          Reset
+      <HStack justify="space-between">
+        <Button
+          colorPalette="red"
+          variant={isDeleting ? "solid" : "subtle"}
+          onClick={() => handleDelete()}
+          onBlur={() => setIsDeleting(false)}
+        >
+          {isDeleting ? "Confirm Delete" : "Delete"}
         </Button>
-        <Button colorPalette="brand" onClick={() => handleSave()}>
-          Save
-        </Button>
+        <HStack>
+          <Button variant="subtle" onClick={() => handleReset()}>
+            Reset
+          </Button>
+          <Button colorPalette="brand" onClick={() => handleSave()}>
+            Save
+          </Button>
+        </HStack>
       </HStack>
     </Stack>
   )

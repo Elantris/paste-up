@@ -1,6 +1,7 @@
 import { Box, Flex, Heading, HStack, Image, Spacer } from "@chakra-ui/react"
 import InstructionModal from "./InstructionModal"
 import ProjectEditor from "./ProjectEditor"
+import ProjectMenu from "./ProjectMenu"
 import ProjectPreview from "./ProjectPreview"
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
           <Heading as="h1" size="2xl">
             Paste Up!
           </Heading>
+          <ProjectMenu />
 
           <Spacer />
           <InstructionModal />

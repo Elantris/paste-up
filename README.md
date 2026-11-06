@@ -2,6 +2,8 @@
 
 A card editor for board game translators. Write each card's translation into an HTML template, print the pieces on A4 paper, cut them out, and lay each piece over a card's text. The translation covers only the text, so the rest of the card's artwork stays visible.
 
+Projects are saved in the browser. The project menu in the header switches between them and starts new ones, Export downloads the current project as a JSON file, and Import adds a JSON file as a new project.
+
 ## Examples
 
 The `examples` folder holds translation projects for three invented board games, each translated from English into Traditional Chinese. Load one with the Import button. A browser with no saved project opens `ember-harbor.json`, and the first edit saves it as that browser's own project. Each piece shows the English card name and a card code, so the pieces can be matched to their cards after cutting.

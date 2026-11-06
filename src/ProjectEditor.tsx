@@ -8,8 +8,7 @@ import ProjectSettingSection from "./ProjectSettingSection"
 
 function ProjectEditor() {
   const fileRef = useRef<HTMLInputElement>(null)
-  const { project, handleProjectChange } = useContext(ProjectContext)
-  const [importCount, setImportCount] = useState(0)
+  const { project, addProject } = useContext(ProjectContext)
   const [isExporting, setIsExporting] = useState(false)
 
   if (!project) {
@@ -28,11 +27,10 @@ function ProjectEditor() {
     reader.onload = (e) => {
       try {
         const json = JSON.parse(e.target?.result as string)
-        if (typeof json !== "object") {
+        if (!json || typeof json !== "object" || Array.isArray(json)) {
           return
         }
-        handleProjectChange?.(json)
-        setImportCount((count) => count + 1)
+        addProject?.(json)
       } catch (error) {
         console.error(error)
       }
@@ -64,7 +62,7 @@ function ProjectEditor() {
   return (
     <>
       <Box flexGrow={1} p="1rem" overflowY="auto">
-        <Flex key={importCount} direction="column" gap="1rem">
+        <Flex key={project.id} direction="column" gap="1rem">
           <ProjectSettingSection />
           <CardTemplateSection />
           <CardInstanceSection />

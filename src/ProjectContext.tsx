@@ -1,7 +1,13 @@
 import mustache from "mustache"
 import { createContext, useState, type FC, type ReactNode } from "react"
 import { v4 as uuidv4 } from "uuid"
-import emberHarbor from "../examples/ember-harbor.json"
+import {
+  createEmptyProject,
+  loadProjectStore,
+  saveProjectStore,
+  toNewProject,
+  type ProjectStore,
+} from "./projectStore"
 import type {
   CardInstanceProps,
   CardTemplateProps,
@@ -10,31 +16,12 @@ import type {
   RenderedCardsProps,
 } from "./types"
 
-const defaultProject: ProjectProps = {
-  id: uuidv4(),
-  name: "Untitled Project",
-  pageClassName: "",
-  cardTemplates: [],
-  cardInstances: [],
-}
 const defaultCardTemplateContent = `
 <div class="w-[63mm] min-h-[30mm] border border-black text-center text-[8pt]">
   <div class="text-[12pt] font-bold">{{title}}</div>
   <div>{{body}}</div>
 </div>
 `.trim()
-const exampleProject = emberHarbor as ProjectProps
-
-const loadProject = (): ProjectProps => {
-  try {
-    const saved: unknown = JSON.parse(localStorage.getItem("project") ?? "")
-    return saved && typeof saved === "object"
-      ? (saved as ProjectProps)
-      : exampleProject
-  } catch {
-    return exampleProject
-  }
-}
 
 const compareFolderNames = (a = "", b = "") => {
   if (a === b) {
@@ -51,7 +38,11 @@ const compareFolderNames = (a = "", b = "") => {
 
 type ProjectContextProps = {
   project: ProjectProps | null
+  projects: ProjectProps[]
   handleProjectChange?: (updates: Partial<ProjectProps>) => void
+  addProject?: (source?: Partial<ProjectProps>) => void
+  switchProject?: (projectId: string) => void
+  removeProject?: (projectId: string) => void
 
   createCardTemplate?: (cardTemplateId?: string) => void
   createCardInstance?: (cardInstance: Omit<CardInstanceProps, "id">) => void
@@ -68,12 +59,21 @@ type ProjectContextProps = {
 
 const ProjectContext = createContext<ProjectContextProps>({
   project: null,
+  projects: [],
 })
 
 export const ProjectProvider: FC<{
   children: ReactNode
 }> = ({ children }) => {
-  const [project, setProject] = useState<ProjectProps | null>(loadProject)
+  const [store, setStore] = useState<ProjectStore>(loadProjectStore)
+  const project =
+    store.projects.find((item) => item.id === store.activeProjectId) ??
+    store.projects[0]
+
+  const commitStore = (nextStore: ProjectStore) => {
+    setStore(nextStore)
+    saveProjectStore(nextStore)
+  }
 
   const renderedCards =
     project?.cardInstances.reduce<RenderedCardsProps[]>(
@@ -111,7 +111,7 @@ export const ProjectProvider: FC<{
   const handleProjectChange: ProjectContextProps["handleProjectChange"] = (
     updates,
   ) => {
-    const newProject = Object.assign({}, project || defaultProject, updates)
+    const newProject = { ...project, ...updates, id: project.id }
     if (updates["cardInstances"]) {
       newProject.cardInstances.sort(
         (a, b) =>
@@ -119,8 +119,43 @@ export const ProjectProvider: FC<{
           a.name.localeCompare(b.name),
       )
     }
-    setProject(newProject)
-    localStorage.setItem("project", JSON.stringify(newProject))
+    commitStore({
+      ...store,
+      projects: store.projects.map((item) =>
+        item.id === project.id ? newProject : item,
+      ),
+    })
+  }
+
+  const addProject: ProjectContextProps["addProject"] = (source) => {
+    const newProject = source
+      ? toNewProject(
+          source,
+          store.projects.map((item) => item.id),
+        )
+      : createEmptyProject()
+    commitStore({
+      activeProjectId: newProject.id,
+      projects: [...store.projects, newProject],
+    })
+  }
+
+  const switchProject: ProjectContextProps["switchProject"] = (projectId) => {
+    if (store.projects.some((item) => item.id === projectId)) {
+      commitStore({ ...store, activeProjectId: projectId })
+    }
+  }
+
+  const removeProject: ProjectContextProps["removeProject"] = (projectId) => {
+    const remaining = store.projects.filter((item) => item.id !== projectId)
+    const projects = remaining.length ? remaining : [createEmptyProject()]
+    commitStore({
+      activeProjectId:
+        store.activeProjectId === projectId
+          ? projects[0].id
+          : store.activeProjectId,
+      projects,
+    })
   }
 
   const createCardTemplate: ProjectContextProps["createCardTemplate"] = (
@@ -209,7 +244,11 @@ export const ProjectProvider: FC<{
     <ProjectContext.Provider
       value={{
         project,
+        projects: store.projects,
         handleProjectChange,
+        addProject,
+        switchProject,
+        removeProject,
         createCardTemplate,
         createCardInstance,
         editListSorting,

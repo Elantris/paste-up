@@ -60,10 +60,12 @@ const steps: { title: string; body: ReactNode }[] = [
     title: "Save and share",
     body: (
       <>
-        The project saves in this browser. Export downloads it as a JSON file,
-        and Import opens one, so a translation can move between computers or
-        translators. A browser without a saved project opens the Ember Harbor
-        example.
+        Projects save in this browser. The project menu in the header switches
+        between them or starts a new one, and Delete in Project Setting removes
+        the current one. Export downloads the current project as a JSON file,
+        and Import adds one as a new project, so a translation can move between
+        computers or translators. A browser without a saved project opens the
+        Ember Harbor example.
       </>
     ),
   },
