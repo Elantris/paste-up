@@ -56,7 +56,7 @@ const FolderEditModal: FC<{
                 <Button variant="subtle" onClick={onClose}>
                   Cancel
                 </Button>
-                <Button colorPalette="blue" onClick={() => handleSave()}>
+                <Button colorPalette="brand" onClick={() => handleSave()}>
                   Save
                 </Button>
               </ButtonGroup>

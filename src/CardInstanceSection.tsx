@@ -113,7 +113,7 @@ const CardInstanceItem: FC<{
         >
           <IconButton
             aria-label="edit"
-            colorPalette="blue"
+            colorPalette="brand"
             onClick={() => onEdit?.(cardInstance)}
           >
             <FaPencil />
@@ -163,7 +163,7 @@ const CardInstanceFolder: FC<{
             {isFolderHidden ? <FaRegEyeSlash /> : <FaRegEye />}
           </IconButton>
         </ButtonGroup>
-        <Heading as="h3" size="md" lineClamp={1} flexGrow={1} color="blue.fg">
+        <Heading as="h3" size="md" lineClamp={1} flexGrow={1} color="brand.fg">
           {folder.name}
         </Heading>
         <ButtonGroup
@@ -182,7 +182,7 @@ const CardInstanceFolder: FC<{
           >
             <IconButton
               aria-label="edit"
-              colorPalette="blue"
+              colorPalette="brand"
               onClick={onFolderEdit}
             >
               <FaPencil />
@@ -237,7 +237,7 @@ const CardInstanceSection = () => {
 
   return (
     <Stack bg="bg.panel" borderWidth="1px" p="1rem">
-      <Heading size="xl" color="blue.fg" userSelect="none">
+      <Heading size="xl" color="brand.fg" userSelect="none">
         Card Instances
       </Heading>
 

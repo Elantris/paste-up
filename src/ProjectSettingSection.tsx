@@ -51,7 +51,7 @@ const ProjectSettingSection = () => {
 
   return (
     <Stack bg="bg.panel" borderWidth="1px" p="1rem" userSelect="none">
-      <Heading size="xl" color="blue.fg">
+      <Heading size="xl" color="brand.fg">
         Project Setting
       </Heading>
 
@@ -82,7 +82,7 @@ const ProjectSettingSection = () => {
         <Button variant="subtle" onClick={() => handleReset()}>
           Reset
         </Button>
-        <Button colorPalette="blue" onClick={() => handleSave()}>
+        <Button colorPalette="brand" onClick={() => handleSave()}>
           Save
         </Button>
       </HStack>

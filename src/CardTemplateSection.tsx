@@ -38,7 +38,7 @@ const CardTemplateSection = () => {
 
   return (
     <Stack bg="bg.panel" borderWidth="1px" p="1rem">
-      <Heading size="xl" color="blue.fg" userSelect="none">
+      <Heading size="xl" color="brand.fg" userSelect="none">
         Card Templates
       </Heading>
 
@@ -107,7 +107,7 @@ const CardTemplateSection = () => {
             >
               <IconButton
                 aria-label="edit"
-                colorPalette="blue"
+                colorPalette="brand"
                 onClick={() => {
                   setSelectedCardTemplate(cardTemplate)
                   setActiveModalKey("EDITING")

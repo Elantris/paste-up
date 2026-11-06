@@ -265,7 +265,7 @@ const CardInstanceEditForm: FC<CardInstanceEditFormProps> = ({
           <Button variant="subtle" onClick={onClose}>
             Cancel
           </Button>
-          <Button colorPalette="blue" onClick={() => handleSave()}>
+          <Button colorPalette="brand" onClick={() => handleSave()}>
             {cardInstance ? "Save" : "Create"}
           </Button>
         </ButtonGroup>

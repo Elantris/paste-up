@@ -6,13 +6,19 @@ function App() {
   return (
     <>
       <Flex id="app" direction="column" h="100vh" w="100vw" margin="0 auto">
-        <HStack as="header" height="3rem" bg="bg.panel" borderBottomWidth="1px">
+        <HStack
+          as="header"
+          height="3rem"
+          colorPalette="brand"
+          bg="colorPalette.solid"
+          color="colorPalette.contrast"
+        >
           <Flex
             align="center"
             justify="center"
             w="3rem"
             h="3rem"
-            bg="bg.muted"
+            bg="brand.700"
             cursor="pointer"
           >
             <Image src="label.png" alt="logo" width="1.5rem" />

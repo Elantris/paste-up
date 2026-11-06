@@ -176,7 +176,7 @@ const CardTemplateEditForm: FC<CardTemplateEditFormProps> = ({
           <Button variant="subtle" onClick={onClose}>
             Cancel
           </Button>
-          <Button colorPalette="blue" onClick={() => handleSave()}>
+          <Button colorPalette="brand" onClick={() => handleSave()}>
             Save
           </Button>
         </ButtonGroup>
