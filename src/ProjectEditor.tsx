@@ -17,10 +17,12 @@ function ProjectEditor() {
   }
 
   const handleImport = () => {
-    const file = fileRef.current?.files?.[0]
-    if (!file) {
+    const fileInput = fileRef.current
+    const file = fileInput?.files?.[0]
+    if (!fileInput || !file) {
       return
     }
+    fileInput.value = ""
 
     const reader = new FileReader()
     reader.onload = (e) => {
@@ -84,7 +86,7 @@ function ProjectEditor() {
           ref={fileRef}
           type="file"
           hidden
-          accept="*.json"
+          accept=".json,application/json"
           onChange={() => handleImport()}
         />
         <Button
