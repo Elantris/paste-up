@@ -1,12 +1,7 @@
 import mustache from "mustache"
-import {
-  createContext,
-  useEffect,
-  useState,
-  type FC,
-  type ReactNode,
-} from "react"
+import { createContext, useState, type FC, type ReactNode } from "react"
 import { v4 as uuidv4 } from "uuid"
+import emberHarbor from "../examples/ember-harbor.json"
 import type {
   CardInstanceProps,
   CardTemplateProps,
@@ -28,6 +23,18 @@ const defaultCardTemplateContent = `
   <div>{{body}}</div>
 </div>
 `.trim()
+const exampleProject = emberHarbor as ProjectProps
+
+const loadProject = (): ProjectProps => {
+  try {
+    const saved: unknown = JSON.parse(localStorage.getItem("project") ?? "")
+    return saved && typeof saved === "object"
+      ? (saved as ProjectProps)
+      : exampleProject
+  } catch {
+    return exampleProject
+  }
+}
 
 const compareFolderNames = (a = "", b = "") => {
   if (a === b) {
@@ -66,7 +73,7 @@ const ProjectContext = createContext<ProjectContextProps>({
 export const ProjectProvider: FC<{
   children: ReactNode
 }> = ({ children }) => {
-  const [project, setProject] = useState<ProjectProps | null>(null)
+  const [project, setProject] = useState<ProjectProps | null>(loadProject)
 
   const renderedCards =
     project?.cardInstances.reduce<RenderedCardsProps[]>(
@@ -100,16 +107,6 @@ export const ProjectProvider: FC<{
       },
       [],
     ) || []
-
-  useEffect(() => {
-    const raw = localStorage.getItem("project") || ""
-    try {
-      const saved = JSON.parse(raw)
-      setProject(saved)
-    } catch {
-      setProject(defaultProject)
-    }
-  }, [])
 
   const handleProjectChange: ProjectContextProps["handleProjectChange"] = (
     updates,
