@@ -8,12 +8,14 @@ import {
   Stack,
 } from "@chakra-ui/react"
 import { useContext, useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
 import Loading from "./Loading"
 import ProjectContext from "./ProjectContext"
 
 const ProjectSettingSection = () => {
   const { project, handleProjectChange, removeProject } =
     useContext(ProjectContext)
+  const { t } = useTranslation()
   const nameRef = useRef<HTMLInputElement>(null)
   const pageClassNameRef = useRef<HTMLInputElement>(null)
   const [validationErrors, setValidationErrors] = useState<
@@ -41,7 +43,10 @@ const ProjectSettingSection = () => {
 
     const name = nameRef.current?.value
     if (!name) {
-      setValidationErrors((prev) => ({ ...prev, name: "Name is required." }))
+      setValidationErrors((prev) => ({
+        ...prev,
+        name: t("error.nameRequired"),
+      }))
       return
     }
 
@@ -62,13 +67,13 @@ const ProjectSettingSection = () => {
   return (
     <Stack bg="bg.panel" borderWidth="1px" p="1rem" userSelect="none">
       <Heading size="xl" color="brand.fg">
-        Project Setting
+        {t("projectSetting.title")}
       </Heading>
 
       <Separator />
 
       <Field.Root invalid={!!validationErrors.name}>
-        <Field.Label>Name</Field.Label>
+        <Field.Label>{t("projectSetting.name")}</Field.Label>
         <Input
           ref={nameRef}
           defaultValue={project.name}
@@ -80,7 +85,7 @@ const ProjectSettingSection = () => {
         <Field.ErrorText>{validationErrors.name}</Field.ErrorText>
       </Field.Root>
       <Field.Root>
-        <Field.Label>Page Class Name</Field.Label>
+        <Field.Label>{t("projectSetting.pageClassName")}</Field.Label>
         <Input
           ref={pageClassNameRef}
           defaultValue={project.pageClassName}
@@ -95,14 +100,14 @@ const ProjectSettingSection = () => {
           onClick={() => handleDelete()}
           onBlur={() => setIsDeleting(false)}
         >
-          {isDeleting ? "Confirm Delete" : "Delete"}
+          {isDeleting ? t("action.confirmDelete") : t("action.delete")}
         </Button>
         <HStack>
           <Button variant="subtle" onClick={() => handleReset()}>
-            Reset
+            {t("action.reset")}
           </Button>
           <Button colorPalette="brand" onClick={() => handleSave()}>
-            Save
+            {t("action.save")}
           </Button>
         </HStack>
       </HStack>

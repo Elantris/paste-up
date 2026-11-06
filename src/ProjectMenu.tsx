@@ -1,11 +1,13 @@
 import { Button, Menu, Portal, Span } from "@chakra-ui/react"
 import { useContext } from "react"
+import { useTranslation } from "react-i18next"
 import { LuChevronDown, LuFolderOpen, LuPlus } from "react-icons/lu"
 import ProjectContext from "./ProjectContext"
 
 const ProjectMenu = () => {
   const { project, projects, addProject, switchProject } =
     useContext(ProjectContext)
+  const { t } = useTranslation()
 
   return (
     <Menu.Root positioning={{ placement: "bottom-start" }}>
@@ -31,7 +33,7 @@ const ProjectMenu = () => {
               value={project?.id}
               onValueChange={(e) => switchProject?.(e.value)}
             >
-              <Menu.ItemGroupLabel>Projects</Menu.ItemGroupLabel>
+              <Menu.ItemGroupLabel>{t("header.projects")}</Menu.ItemGroupLabel>
               {projects.map((item) => (
                 <Menu.RadioItem key={item.id} value={item.id}>
                   <Menu.ItemText truncate>{item.name}</Menu.ItemText>
@@ -42,7 +44,7 @@ const ProjectMenu = () => {
             <Menu.Separator />
             <Menu.Item value="new-project" onSelect={() => addProject?.()}>
               <LuPlus />
-              New project
+              {t("header.newProject")}
             </Menu.Item>
           </Menu.Content>
         </Menu.Positioner>

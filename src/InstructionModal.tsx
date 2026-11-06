@@ -9,72 +9,32 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import { useContext, type ReactNode } from "react"
+import { useContext } from "react"
+import { Trans, useTranslation } from "react-i18next"
 import { LuCircleHelp, LuPlus } from "react-icons/lu"
 import { exampleProjects } from "./examples"
+import type { MessageKey } from "./i18n/i18n"
 import ProjectContext from "./ProjectContext"
 
-const steps: { title: string; body: ReactNode }[] = [
-  {
-    title: "Design a card template",
-    body: (
-      <>
-        A template is the HTML for one printed piece. Style it with Tailwind
-        classes and size it in millimeters to match the text area it covers, for
-        example <Code>w-[56mm] h-[32mm]</Code>. <Code>{"{{title}}"}</Code> fills
-        in an attribute as plain text, and <Code>{"{{{effect}}}"}</Code> keeps
-        HTML such as <Code>{"<b>"}</Code>.
-      </>
-    ),
-  },
-  {
-    title: "Add card instances",
-    body: (
-      <>
-        Each instance fills a template with one card's attributes, written as
-        JSON. Amount sets how many copies print. Folders group instances, and
-        the eye icon hides an instance or a whole folder from the pages.
-      </>
-    ),
-  },
-  {
-    title: "Check the pages",
-    body: (
-      <>
-        The preview shows A4 pages as they print. A row of pieces that does not
-        fit moves to the next page. Page Class Name adds Tailwind classes to
-        every page, for example <Code>flex flex-wrap gap-[2mm]</Code> to leave
-        space between pieces.
-      </>
-    ),
-  },
-  {
-    title: "Print and cut",
-    body: (
-      <>
-        Open the browser's print dialog with Ctrl + P (⌘ + P on a Mac). Keep the
-        scale at 100% and turn on background graphics so colored pieces print.
-        Cut along each piece's border and lay it over its card's text; a card
-        sleeve holds it in place.
-      </>
-    ),
-  },
-  {
-    title: "Save and share",
-    body: (
-      <>
-        Projects save in this browser. The project menu in the header switches
-        between them or starts a new one, and Delete in Project Setting removes
-        the current one. Export downloads the current project as a JSON file,
-        and Import adds one as a new project, so a translation can move between
-        computers or translators. The buttons below add the example projects.
-      </>
-    ),
-  },
+const steps: { title: MessageKey; body: MessageKey }[] = [
+  { title: "instructions.templateTitle", body: "instructions.templateBody" },
+  { title: "instructions.instancesTitle", body: "instructions.instancesBody" },
+  { title: "instructions.pagesTitle", body: "instructions.pagesBody" },
+  { title: "instructions.printTitle", body: "instructions.printBody" },
+  { title: "instructions.saveTitle", body: "instructions.saveBody" },
 ]
+
+const codeSamples = {
+  size: <Code>w-[56mm] h-[32mm]</Code>,
+  plain: <Code>{"{{title}}"}</Code>,
+  html: <Code>{"{{{effect}}}"}</Code>,
+  tag: <Code>{"<b>"}</Code>,
+  pageClass: <Code>flex flex-wrap gap-[2mm]</Code>,
+}
 
 const InstructionModal = () => {
   const { addProject } = useContext(ProjectContext)
+  const { t } = useTranslation()
 
   return (
     <Dialog.Root size="lg" placement="center" scrollBehavior="inside">
@@ -87,7 +47,7 @@ const InstructionModal = () => {
           _expanded={{ bg: "brand.700" }}
         >
           <LuCircleHelp />
-          Instructions
+          {t("header.instructions")}
         </Button>
       </Dialog.Trigger>
 
@@ -96,26 +56,23 @@ const InstructionModal = () => {
         <Dialog.Positioner>
           <Dialog.Content>
             <Dialog.Header>
-              <Dialog.Title>How to use Paste Up</Dialog.Title>
+              <Dialog.Title>{t("instructions.title")}</Dialog.Title>
             </Dialog.Header>
             <Dialog.CloseTrigger asChild>
-              <CloseButton size="sm" />
+              <CloseButton size="sm" aria-label={t("action.close")} />
             </Dialog.CloseTrigger>
 
             <Dialog.Body>
               <Stack gap="1.25rem">
-                <Text>
-                  Paste Up prints card translations on small pieces of paper.
-                  Cut each piece out and lay it over the card's text, so the
-                  translation covers the original words and the rest of the
-                  artwork stays visible.
-                </Text>
+                <Text>{t("instructions.intro")}</Text>
                 {steps.map((step, index) => (
                   <Stack key={step.title} gap="0.25rem">
                     <Heading as="h3" size="md" color="brand.fg">
-                      {index + 1}. {step.title}
+                      {index + 1}. {t(step.title)}
                     </Heading>
-                    <Text>{step.body}</Text>
+                    <Text>
+                      <Trans i18nKey={step.body} components={codeSamples} />
+                    </Text>
                   </Stack>
                 ))}
               </Stack>
@@ -124,7 +81,7 @@ const InstructionModal = () => {
             <Dialog.Footer justifyContent="space-between" alignItems="end">
               <Stack gap="0.5rem">
                 <Text textStyle="sm" color="fg.muted">
-                  Add an example project
+                  {t("instructions.addExample")}
                 </Text>
                 <HStack wrap="wrap">
                   {exampleProjects.map((example) => (
@@ -142,7 +99,7 @@ const InstructionModal = () => {
                 </HStack>
               </Stack>
               <Dialog.ActionTrigger asChild>
-                <Button colorPalette="brand">Got it</Button>
+                <Button colorPalette="brand">{t("instructions.gotIt")}</Button>
               </Dialog.ActionTrigger>
             </Dialog.Footer>
           </Dialog.Content>

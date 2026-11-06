@@ -17,6 +17,7 @@ import { json } from "@codemirror/lang-json"
 import { materialLight } from "@uiw/codemirror-theme-material"
 import ReactCodeMirror from "@uiw/react-codemirror"
 import { useContext, useRef, useState, type FC } from "react"
+import { useTranslation } from "react-i18next"
 import ProjectContext from "./ProjectContext"
 import type { CardInstanceProps } from "./types"
 
@@ -35,6 +36,7 @@ const CardInstanceEditForm: FC<CardInstanceEditFormProps> = ({
   onSave,
 }) => {
   const { project } = useContext(ProjectContext)
+  const { t } = useTranslation()
 
   const nameRef = useRef<HTMLInputElement>(null)
   const folderRef = useRef<HTMLInputElement>(null)
@@ -68,7 +70,7 @@ const CardInstanceEditForm: FC<CardInstanceEditFormProps> = ({
     } catch {
       setValidationErrors((prev) => ({
         ...prev,
-        attributes: "Invalid JSON value.",
+        attributes: t("error.invalidJson"),
       }))
       return
     }
@@ -97,20 +99,23 @@ const CardInstanceEditForm: FC<CardInstanceEditFormProps> = ({
     const cardTemplateId = cardTemplateIdRef.current?.value || ""
     const amount = Number(amountRef.current?.value || 0)
     if (!name) {
-      setValidationErrors((prev) => ({ ...prev, name: "Name is required." }))
+      setValidationErrors((prev) => ({
+        ...prev,
+        name: t("error.nameRequired"),
+      }))
       return
     }
     if (!cardTemplateId) {
       setValidationErrors((prev) => ({
         ...prev,
-        cardTemplateId: "Template ID is required.",
+        cardTemplateId: t("error.templateRequired"),
       }))
       return
     }
     if (!amount || isNaN(amount) || amount < 0) {
       setValidationErrors((prev) => ({
         ...prev,
-        amount: "Amount must be a positive number.",
+        amount: t("error.amountPositive"),
       }))
       return
     }
@@ -130,19 +135,19 @@ const CardInstanceEditForm: FC<CardInstanceEditFormProps> = ({
   return (
     <>
       <Dialog.Header>
-        <Dialog.Title>Edit Card Instance</Dialog.Title>
+        <Dialog.Title>{t("instanceEdit.title")}</Dialog.Title>
       </Dialog.Header>
       <Dialog.CloseTrigger asChild>
-        <CloseButton size="sm" />
+        <CloseButton size="sm" aria-label={t("action.close")} />
       </Dialog.CloseTrigger>
 
       <Dialog.Body>
         <Stack>
           <Field.Root invalid={!!validationErrors.name}>
-            <Field.Label>Name</Field.Label>
+            <Field.Label>{t("instanceEdit.name")}</Field.Label>
             <Input
               ref={nameRef}
-              defaultValue={cardInstance?.name || "Untitled"}
+              defaultValue={cardInstance?.name || t("card.untitled")}
               onFocus={() =>
                 validationErrors.name &&
                 setValidationErrors((prev) => ({ ...prev, name: "" }))
@@ -152,7 +157,7 @@ const CardInstanceEditForm: FC<CardInstanceEditFormProps> = ({
           </Field.Root>
 
           <Field.Root invalid={!!validationErrors.folder}>
-            <Field.Label>Folder</Field.Label>
+            <Field.Label>{t("instanceEdit.folder")}</Field.Label>
             <Input
               ref={folderRef}
               defaultValue={cardInstance?.folder || ""}
@@ -184,7 +189,7 @@ const CardInstanceEditForm: FC<CardInstanceEditFormProps> = ({
           </Field.Root>
 
           <Field.Root invalid={!!validationErrors.cardTemplateId}>
-            <Field.Label>Template</Field.Label>
+            <Field.Label>{t("instanceEdit.template")}</Field.Label>
             <NativeSelect.Root>
               <NativeSelect.Field
                 ref={cardTemplateIdRef}
@@ -209,7 +214,7 @@ const CardInstanceEditForm: FC<CardInstanceEditFormProps> = ({
           </Field.Root>
 
           <Field.Root invalid={!!validationErrors.attributes}>
-            <Field.Label>Attributes</Field.Label>
+            <Field.Label>{t("instanceEdit.attributes")}</Field.Label>
             <Box w="full" minH="15rem">
               <ReactCodeMirror
                 height="15rem"
@@ -230,7 +235,7 @@ const CardInstanceEditForm: FC<CardInstanceEditFormProps> = ({
           </Field.Root>
 
           <Field.Root invalid={!!validationErrors.amount}>
-            <Field.Label>Amount</Field.Label>
+            <Field.Label>{t("instanceEdit.amount")}</Field.Label>
             <NumberInput.Root
               w="full"
               min={1}
@@ -256,17 +261,17 @@ const CardInstanceEditForm: FC<CardInstanceEditFormProps> = ({
       <Dialog.Footer justifyContent="space-between">
         {cardInstance ? (
           <Button colorPalette="red" onClick={() => handleDelete()}>
-            {isDeleting ? "Confirm deletion" : "Delete"}
+            {isDeleting ? t("action.confirmDelete") : t("action.delete")}
           </Button>
         ) : (
           <div />
         )}
         <ButtonGroup>
           <Button variant="subtle" onClick={onClose}>
-            Cancel
+            {t("action.cancel")}
           </Button>
           <Button colorPalette="brand" onClick={() => handleSave()}>
-            {cardInstance ? "Save" : "Create"}
+            {cardInstance ? t("action.save") : t("action.create")}
           </Button>
         </ButtonGroup>
       </Dialog.Footer>

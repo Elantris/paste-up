@@ -9,6 +9,7 @@ import {
   Stack,
 } from "@chakra-ui/react"
 import { useContext, useState, type FC } from "react"
+import { useTranslation } from "react-i18next"
 import {
   FaAngleDown,
   FaAngleUp,
@@ -34,6 +35,7 @@ const CardInstanceItem: FC<{
 }> = ({ cardInstance, onEdit }) => {
   const { project, renderedCards, createCardInstance, updateListItems } =
     useContext(ProjectContext)
+  const { t } = useTranslation()
 
   return (
     <HStack
@@ -42,7 +44,7 @@ const CardInstanceItem: FC<{
       opacity={cardInstance.isHidden ? "0.5" : undefined}
     >
       <IconButton
-        aria-label="visibility"
+        aria-label={t("action.toggleVisibility")}
         size="sm"
         variant="ghost"
         onClick={() =>
@@ -95,13 +97,13 @@ const CardInstanceItem: FC<{
         bg="bg.panel"
       >
         <Tooltip
-          content="Copy"
+          content={t("action.copy")}
           positioning={{
             placement: "top",
           }}
         >
           <IconButton
-            aria-label="copy"
+            aria-label={t("action.copy")}
             variant="subtle"
             onClick={() => createCardInstance?.(cardInstance)}
           >
@@ -109,13 +111,13 @@ const CardInstanceItem: FC<{
           </IconButton>
         </Tooltip>
         <Tooltip
-          content="Edit"
+          content={t("action.edit")}
           positioning={{
             placement: "top",
           }}
         >
           <IconButton
-            aria-label="edit"
+            aria-label={t("action.edit")}
             colorPalette="brand"
             onClick={() => onEdit?.(cardInstance)}
           >
@@ -133,6 +135,7 @@ const CardInstanceFolder: FC<{
   onItemEdit?: (cardInstance: CardInstanceProps) => void
 }> = ({ folder, onFolderEdit, onItemEdit }) => {
   const { updateListItems } = useContext(ProjectContext)
+  const { t } = useTranslation()
   const [isExpanded, setIsExpanded] = useState(false)
 
   const isFolderHidden = folder.items.every((v) => v.isHidden)
@@ -146,13 +149,13 @@ const CardInstanceFolder: FC<{
       >
         <ButtonGroup size="sm" variant="ghost" gap="0">
           <IconButton
-            aria-label="toggle"
+            aria-label={t("action.toggleFolder")}
             onClick={() => setIsExpanded(!isExpanded)}
           >
             {isExpanded ? <FaAngleUp /> : <FaAngleDown />}
           </IconButton>
           <IconButton
-            aria-label="visibility"
+            aria-label={t("action.toggleVisibility")}
             onClick={() => {
               updateListItems?.(
                 "cardInstances",
@@ -178,13 +181,13 @@ const CardInstanceFolder: FC<{
           bg="bg.panel"
         >
           <Tooltip
-            content="Edit"
+            content={t("action.edit")}
             positioning={{
               placement: "top",
             }}
           >
             <IconButton
-              aria-label="edit"
+              aria-label={t("action.edit")}
               colorPalette="brand"
               onClick={onFolderEdit}
             >
@@ -216,6 +219,7 @@ const CardInstanceFolder: FC<{
 const CardInstanceSection = () => {
   const { project, createCardInstance, updateListItems, removeListItems } =
     useContext(ProjectContext)
+  const { t } = useTranslation()
 
   const [selectedCardInstance, setSelectedCardInstance] =
     useState<CardInstanceProps | null>(null)
@@ -245,7 +249,7 @@ const CardInstanceSection = () => {
   return (
     <Stack bg="bg.panel" borderWidth="1px" p="1rem">
       <Heading size="xl" color="brand.fg" userSelect="none">
-        Card Instances
+        {t("cardInstances.title")}
       </Heading>
 
       <Separator />
@@ -289,7 +293,7 @@ const CardInstanceSection = () => {
         }}
       >
         <LuPlus />
-        Add
+        {t("action.add")}
       </Button>
 
       <FolderEditModal

@@ -8,6 +8,7 @@ import {
   Portal,
 } from "@chakra-ui/react"
 import { useRef, type FC } from "react"
+import { useTranslation } from "react-i18next"
 
 const SortingModal: FC<{
   isOpen: boolean
@@ -16,6 +17,7 @@ const SortingModal: FC<{
   onChange: (newValue: number) => void
 }> = ({ isOpen, onClose, value, onChange }) => {
   const sortingRef = useRef<HTMLInputElement>(null)
+  const { t } = useTranslation()
 
   const handleSave = () => {
     if (!sortingRef.current) {
@@ -42,15 +44,15 @@ const SortingModal: FC<{
         <Dialog.Positioner>
           <Dialog.Content>
             <Dialog.Header>
-              <Dialog.Title>Edit Sorting</Dialog.Title>
+              <Dialog.Title>{t("sorting.title")}</Dialog.Title>
             </Dialog.Header>
             <Dialog.CloseTrigger asChild>
-              <CloseButton size="sm" />
+              <CloseButton size="sm" aria-label={t("action.close")} />
             </Dialog.CloseTrigger>
 
             <Dialog.Body>
               <Field.Root>
-                <Field.Label>Move to</Field.Label>
+                <Field.Label>{t("sorting.moveTo")}</Field.Label>
                 <Input
                   ref={sortingRef}
                   defaultValue={`${value + 1}`}
@@ -62,10 +64,10 @@ const SortingModal: FC<{
             <Dialog.Footer>
               <ButtonGroup>
                 <Button variant="subtle" onClick={onClose}>
-                  Cancel
+                  {t("action.cancel")}
                 </Button>
                 <Button colorPalette="brand" onClick={() => handleSave()}>
-                  Save
+                  {t("action.save")}
                 </Button>
               </ButtonGroup>
             </Dialog.Footer>

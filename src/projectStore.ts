@@ -12,9 +12,9 @@ const STORE_KEY = "paste-up"
 // Holds one project; read only while STORE_KEY is empty.
 const LEGACY_PROJECT_KEY = "project"
 
-export const createEmptyProject = (): ProjectProps => ({
+export const createEmptyProject = (name: string): ProjectProps => ({
   id: uuidv4(),
-  name: "Untitled Project",
+  name,
   pageClassName: "",
   cardTemplates: [],
   cardInstances: [],

@@ -9,6 +9,7 @@ import {
   Stack,
 } from "@chakra-ui/react"
 import { useContext, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { FaCopy, FaPencil } from "react-icons/fa6"
 import { LuPlus } from "react-icons/lu"
 import CardTemplateEditModal from "./CardTemplateEditModal"
@@ -26,6 +27,7 @@ const CardTemplateSection = () => {
     updateListItems,
     removeListItems,
   } = useContext(ProjectContext)
+  const { t } = useTranslation()
 
   const [selectedSorting, setSelectedSorting] = useState<number>(-1)
   const [selectedCardTemplate, setSelectedCardTemplate] =
@@ -39,7 +41,7 @@ const CardTemplateSection = () => {
   return (
     <Stack bg="bg.panel" borderWidth="1px" p="1rem">
       <Heading size="xl" color="brand.fg" userSelect="none">
-        Card Templates
+        {t("cardTemplates.title")}
       </Heading>
 
       <Separator />
@@ -86,13 +88,13 @@ const CardTemplateSection = () => {
             bg="bg.panel"
           >
             <Tooltip
-              content="Copy"
+              content={t("action.copy")}
               positioning={{
                 placement: "top",
               }}
             >
               <IconButton
-                aria-label="copy"
+                aria-label={t("action.copy")}
                 variant="subtle"
                 onClick={() => createCardTemplate?.(cardTemplate.id)}
               >
@@ -100,13 +102,13 @@ const CardTemplateSection = () => {
               </IconButton>
             </Tooltip>
             <Tooltip
-              content="Edit"
+              content={t("action.edit")}
               positioning={{
                 placement: "top",
               }}
             >
               <IconButton
-                aria-label="edit"
+                aria-label={t("action.edit")}
                 colorPalette="brand"
                 onClick={() => {
                   setSelectedCardTemplate(cardTemplate)
@@ -122,7 +124,7 @@ const CardTemplateSection = () => {
 
       <Button size="sm" variant="subtle" onClick={() => createCardTemplate?.()}>
         <LuPlus />
-        Add
+        {t("action.add")}
       </Button>
 
       <SortingModal

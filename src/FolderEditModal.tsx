@@ -8,6 +8,7 @@ import {
   Portal,
 } from "@chakra-ui/react"
 import { useRef, type FC } from "react"
+import { useTranslation } from "react-i18next"
 
 const FolderEditModal: FC<{
   isOpen: boolean
@@ -16,6 +17,7 @@ const FolderEditModal: FC<{
   onChange: (newValue: string) => void
 }> = ({ isOpen, onClose, value, onChange }) => {
   const nameRef = useRef<HTMLInputElement>(null)
+  const { t } = useTranslation()
 
   const handleSave = () => {
     onChange(nameRef.current?.value || "")
@@ -38,15 +40,15 @@ const FolderEditModal: FC<{
         <Dialog.Positioner>
           <Dialog.Content>
             <Dialog.Header>
-              <Dialog.Title>Edit Folder</Dialog.Title>
+              <Dialog.Title>{t("folderEdit.title")}</Dialog.Title>
             </Dialog.Header>
             <Dialog.CloseTrigger asChild>
-              <CloseButton size="sm" />
+              <CloseButton size="sm" aria-label={t("action.close")} />
             </Dialog.CloseTrigger>
 
             <Dialog.Body>
               <Field.Root>
-                <Field.Label>Folder Name</Field.Label>
+                <Field.Label>{t("folderEdit.name")}</Field.Label>
                 <Input ref={nameRef} defaultValue={value} />
               </Field.Root>
             </Dialog.Body>
@@ -54,10 +56,10 @@ const FolderEditModal: FC<{
             <Dialog.Footer>
               <ButtonGroup>
                 <Button variant="subtle" onClick={onClose}>
-                  Cancel
+                  {t("action.cancel")}
                 </Button>
                 <Button colorPalette="brand" onClick={() => handleSave()}>
-                  Save
+                  {t("action.save")}
                 </Button>
               </ButtonGroup>
             </Dialog.Footer>

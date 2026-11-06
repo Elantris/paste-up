@@ -15,6 +15,7 @@ import ReactCodeMirror from "@uiw/react-codemirror"
 import html from "prettier/plugins/html"
 import prettier from "prettier/standalone"
 import { useContext, useRef, useState, type FC } from "react"
+import { useTranslation } from "react-i18next"
 import { Tooltip } from "./components/ui/tooltip"
 import ProjectContext from "./ProjectContext"
 import type { CardTemplateProps } from "./types"
@@ -34,6 +35,7 @@ const CardTemplateEditForm: FC<CardTemplateEditFormProps> = ({
   onSave,
 }) => {
   const { project } = useContext(ProjectContext)
+  const { t } = useTranslation()
 
   const nameRef = useRef<HTMLInputElement>(null)
   const [content, setContent] = useState(cardTemplate?.content || "")
@@ -58,7 +60,7 @@ const CardTemplateEditForm: FC<CardTemplateEditFormProps> = ({
     } catch {
       setValidationErrors((prev) => ({
         ...prev,
-        content: "Invalid HTML structure.",
+        content: t("error.invalidHtml"),
       }))
       return
     }
@@ -87,14 +89,17 @@ const CardTemplateEditForm: FC<CardTemplateEditFormProps> = ({
 
     const name = nameRef.current?.value || ""
     if (!name) {
-      setValidationErrors((prev) => ({ ...prev, name: "Name is required." }))
+      setValidationErrors((prev) => ({
+        ...prev,
+        name: t("error.nameRequired"),
+      }))
       return
     }
 
     if (!content) {
       setValidationErrors((prev) => ({
         ...prev,
-        content: "Content is required.",
+        content: t("error.contentRequired"),
       }))
       return
     }
@@ -110,16 +115,16 @@ const CardTemplateEditForm: FC<CardTemplateEditFormProps> = ({
   return (
     <>
       <Dialog.Header>
-        <Dialog.Title>Edit Card Template</Dialog.Title>
+        <Dialog.Title>{t("templateEdit.title")}</Dialog.Title>
       </Dialog.Header>
       <Dialog.CloseTrigger asChild>
-        <CloseButton size="sm" />
+        <CloseButton size="sm" aria-label={t("action.close")} />
       </Dialog.CloseTrigger>
 
       <Dialog.Body>
         <Stack>
           <Field.Root invalid={!!validationErrors.name}>
-            <Field.Label>Name</Field.Label>
+            <Field.Label>{t("templateEdit.name")}</Field.Label>
             <Input
               ref={nameRef}
               defaultValue={cardTemplate?.name}
@@ -132,7 +137,7 @@ const CardTemplateEditForm: FC<CardTemplateEditFormProps> = ({
           </Field.Root>
 
           <Field.Root invalid={!!validationErrors.content}>
-            <Field.Label>Content</Field.Label>
+            <Field.Label>{t("templateEdit.content")}</Field.Label>
             <Box w="full" minH="15rem">
               <ReactCodeMirror
                 height="15rem"
@@ -157,27 +162,27 @@ const CardTemplateEditForm: FC<CardTemplateEditFormProps> = ({
       <Dialog.Footer justifyContent="space-between">
         {childInstanceCount ? (
           <Tooltip
-            content={`dependencies (${childInstanceCount})`}
+            content={t("templateEdit.usedBy", { count: childInstanceCount })}
             positioning={{
               placement: "right",
             }}
           >
             <Button colorPalette="red" disabled>
-              Delete
+              {t("action.delete")}
             </Button>
           </Tooltip>
         ) : (
           <Button colorPalette="red" onClick={() => handleDelete()}>
-            {isDeleting ? "Confirm Delete" : "Delete"}
+            {isDeleting ? t("action.confirmDelete") : t("action.delete")}
           </Button>
         )}
 
         <ButtonGroup>
           <Button variant="subtle" onClick={onClose}>
-            Cancel
+            {t("action.cancel")}
           </Button>
           <Button colorPalette="brand" onClick={() => handleSave()}>
-            Save
+            {t("action.save")}
           </Button>
         </ButtonGroup>
       </Dialog.Footer>

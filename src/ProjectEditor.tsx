@@ -1,5 +1,6 @@
 import { Box, Button, Flex, HStack, Input } from "@chakra-ui/react"
 import { useContext, useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
 import CardInstanceSection from "./CardInstanceSection"
 import CardTemplateSection from "./CardTemplateSection"
 import Loading from "./Loading"
@@ -9,6 +10,7 @@ import ProjectSettingSection from "./ProjectSettingSection"
 function ProjectEditor() {
   const fileRef = useRef<HTMLInputElement>(null)
   const { project, addProject } = useContext(ProjectContext)
+  const { t } = useTranslation()
   const [isExporting, setIsExporting] = useState(false)
 
   if (!project) {
@@ -71,7 +73,7 @@ function ProjectEditor() {
 
       <HStack flexShrink={0} justify="end" p="1rem 2rem">
         <Button variant="subtle" onClick={() => fileRef.current?.click()}>
-          Import
+          {t("action.import")}
         </Button>
         <Input
           ref={fileRef}
@@ -85,7 +87,7 @@ function ProjectEditor() {
           disabled={isExporting}
           onClick={() => handleExport()}
         >
-          Export
+          {t("action.export")}
         </Button>
       </HStack>
     </>

@@ -1,5 +1,6 @@
 import { Box, Flex, Heading, HStack, Image, Spacer } from "@chakra-ui/react"
 import InstructionModal from "./InstructionModal"
+import LocaleMenu from "./LocaleMenu"
 import ProjectEditor from "./ProjectEditor"
 import ProjectMenu from "./ProjectMenu"
 import ProjectPreview from "./ProjectPreview"
@@ -33,6 +34,7 @@ function App() {
           <ProjectMenu />
 
           <Spacer />
+          <LocaleMenu />
           <InstructionModal />
         </HStack>
 

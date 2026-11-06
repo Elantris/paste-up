@@ -1,5 +1,6 @@
 import mustache from "mustache"
 import { createContext, useState, type FC, type ReactNode } from "react"
+import { useTranslation } from "react-i18next"
 import { v4 as uuidv4 } from "uuid"
 import {
   createEmptyProject,
@@ -66,6 +67,7 @@ export const ProjectProvider: FC<{
   children: ReactNode
 }> = ({ children }) => {
   const [store, setStore] = useState<ProjectStore>(loadProjectStore)
+  const { t } = useTranslation()
   const project =
     store.projects.find((item) => item.id === store.activeProjectId) ??
     store.projects[0]
@@ -133,7 +135,7 @@ export const ProjectProvider: FC<{
           source,
           store.projects.map((item) => item.id),
         )
-      : createEmptyProject()
+      : createEmptyProject(t("project.untitled"))
     commitStore({
       activeProjectId: newProject.id,
       projects: [...store.projects, newProject],
@@ -148,7 +150,9 @@ export const ProjectProvider: FC<{
 
   const removeProject: ProjectContextProps["removeProject"] = (projectId) => {
     const remaining = store.projects.filter((item) => item.id !== projectId)
-    const projects = remaining.length ? remaining : [createEmptyProject()]
+    const projects = remaining.length
+      ? remaining
+      : [createEmptyProject(t("project.untitled"))]
     commitStore({
       activeProjectId:
         store.activeProjectId === projectId
@@ -169,7 +173,7 @@ export const ProjectProvider: FC<{
 
     const newCardTemplate: CardTemplateProps = {
       id: uuidv4(),
-      name: targetCardTemplate?.name || "Untitled",
+      name: targetCardTemplate?.name || t("card.untitled"),
       content: targetCardTemplate?.content || defaultCardTemplateContent,
     }
 
