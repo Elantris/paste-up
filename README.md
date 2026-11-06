@@ -6,7 +6,7 @@ Projects are saved in the browser. The project menu in the header switches betwe
 
 ## Examples
 
-The `examples` folder holds translation projects for three invented board games, each translated from English into Traditional Chinese. Load one with the Import button. A browser with no saved project opens `ember-harbor.json`, and the first edit saves it as that browser's own project. Each piece shows the English card name and a card code, so the pieces can be matched to their cards after cutting.
+The `examples` folder holds translation projects for three invented board games, each translated from English into Traditional Chinese. Add one with the buttons at the bottom of the Instructions dialog, or load its file with the Import button. A browser with no saved project opens `ember-harbor.json`, and the first edit saves it as that browser's own project. Each piece shows the English card name and a card code, so the pieces can be matched to their cards after cutting.
 
 - **ember-harbor.json** - 餘燼港, a deck-building game - rules-box overlays, starter and market folders, several copies per card, a hidden promo card
 - **clockwork-orchard.json** - 發條果園, an engine-building game - narrow ability strips for tableau cards and a second template for objective cards

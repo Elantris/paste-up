@@ -4,12 +4,15 @@ import {
   Code,
   Dialog,
   Heading,
+  HStack,
   Portal,
   Stack,
   Text,
 } from "@chakra-ui/react"
-import type { ReactNode } from "react"
-import { LuCircleHelp } from "react-icons/lu"
+import { useContext, type ReactNode } from "react"
+import { LuCircleHelp, LuPlus } from "react-icons/lu"
+import { exampleProjects } from "./examples"
+import ProjectContext from "./ProjectContext"
 
 const steps: { title: string; body: ReactNode }[] = [
   {
@@ -64,14 +67,15 @@ const steps: { title: string; body: ReactNode }[] = [
         between them or starts a new one, and Delete in Project Setting removes
         the current one. Export downloads the current project as a JSON file,
         and Import adds one as a new project, so a translation can move between
-        computers or translators. A browser without a saved project opens the
-        Ember Harbor example.
+        computers or translators. The buttons below add the example projects.
       </>
     ),
   },
 ]
 
 const InstructionModal = () => {
+  const { addProject } = useContext(ProjectContext)
+
   return (
     <Dialog.Root size="lg" placement="center" scrollBehavior="inside">
       <Dialog.Trigger asChild>
@@ -117,7 +121,26 @@ const InstructionModal = () => {
               </Stack>
             </Dialog.Body>
 
-            <Dialog.Footer>
+            <Dialog.Footer justifyContent="space-between" alignItems="end">
+              <Stack gap="0.5rem">
+                <Text textStyle="sm" color="fg.muted">
+                  Add an example project
+                </Text>
+                <HStack wrap="wrap">
+                  {exampleProjects.map((example) => (
+                    <Dialog.ActionTrigger key={example.label} asChild>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => addProject?.(example.project)}
+                      >
+                        <LuPlus />
+                        {example.label}
+                      </Button>
+                    </Dialog.ActionTrigger>
+                  ))}
+                </HStack>
+              </Stack>
               <Dialog.ActionTrigger asChild>
                 <Button colorPalette="brand">Got it</Button>
               </Dialog.ActionTrigger>

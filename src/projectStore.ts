@@ -70,7 +70,7 @@ export const loadProjectStore = (): ProjectStore => {
     return storeOf(toNewProject(legacyProject, []))
   }
 
-  return storeOf(toNewProject(exampleProjects[0], []))
+  return storeOf(toNewProject(exampleProjects[0].project, []))
 }
 
 export const saveProjectStore = (store: ProjectStore) => {
