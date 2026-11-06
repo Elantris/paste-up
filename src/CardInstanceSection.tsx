@@ -1,16 +1,14 @@
-import { AddIcon } from "@chakra-ui/icons"
 import {
   Badge,
   Button,
   ButtonGroup,
-  Divider,
   Heading,
   HStack,
   IconButton,
+  Separator,
   Stack,
-  Tooltip,
 } from "@chakra-ui/react"
-import { FC, useContext, useState } from "react"
+import { useContext, useState, type FC } from "react"
 import {
   FaAngleDown,
   FaAngleUp,
@@ -19,11 +17,13 @@ import {
   FaRegEye,
   FaRegEyeSlash,
 } from "react-icons/fa6"
+import { LuPlus } from "react-icons/lu"
 import CardInstanceEditModal from "./CardInstanceEditModal"
+import { Tooltip } from "./components/ui/tooltip"
 import FolderEditModal from "./FolderEditModal"
 import Loading from "./Loading"
 import ProjectContext from "./ProjectContext"
-import { CardInstanceProps, FolderProps } from "./types"
+import type { CardInstanceProps, FolderProps } from "./types"
 
 const CardInstanceItem: FC<{
   cardInstance: CardInstanceProps
@@ -34,13 +34,12 @@ const CardInstanceItem: FC<{
 
   return (
     <HStack
-      role="group"
+      className="group"
       position="relative"
       opacity={cardInstance.isHidden ? "0.5" : undefined}
     >
       <IconButton
         aria-label="visibility"
-        icon={cardInstance.isHidden ? <FaRegEyeSlash /> : <FaRegEye />}
         size="sm"
         variant="ghost"
         onClick={() =>
@@ -51,12 +50,14 @@ const CardInstanceItem: FC<{
             },
           ])
         }
-      />
+      >
+        {cardInstance.isHidden ? <FaRegEyeSlash /> : <FaRegEye />}
+      </IconButton>
 
       <Heading
         as="h3"
-        size="sm"
-        noOfLines={1}
+        size="md"
+        lineClamp={1}
         flexGrow={1}
         color={
           renderedCards?.find(
@@ -90,20 +91,33 @@ const CardInstanceItem: FC<{
         right="0"
         bg="gray.600"
       >
-        <Tooltip label="Copy" placement="top">
+        <Tooltip
+          content="Copy"
+          positioning={{
+            placement: "top",
+          }}
+        >
           <IconButton
             aria-label="copy"
-            icon={<FaCopy />}
+            variant="subtle"
             onClick={() => createCardInstance?.(cardInstance)}
-          />
+          >
+            <FaCopy />
+          </IconButton>
         </Tooltip>
-        <Tooltip label="Edit" placement="top">
+        <Tooltip
+          content="Edit"
+          positioning={{
+            placement: "top",
+          }}
+        >
           <IconButton
             aria-label="edit"
-            icon={<FaPencil />}
-            colorScheme="blue"
+            colorPalette="blue"
             onClick={() => onEdit?.(cardInstance)}
-          />
+          >
+            <FaPencil />
+          </IconButton>
         </Tooltip>
       </ButtonGroup>
     </HStack>
@@ -121,24 +135,21 @@ const CardInstanceFolder: FC<{
   const isFolderHidden = folder.items.every((v) => v.isHidden)
 
   return (
-    <Stack
-      maxH={isExpanded ? `${32 + 40 * folder.items.length}px` : "32px"}
-      overflow="hidden"
-    >
+    <Stack>
       <HStack
-        role="group"
+        className="group"
         position="relative"
         opacity={isFolderHidden ? "0.5" : undefined}
       >
-        <ButtonGroup size="sm" variant="ghost" gap="0" spacing={0}>
+        <ButtonGroup size="sm" variant="ghost" gap="0">
           <IconButton
             aria-label="toggle"
-            icon={isExpanded ? <FaAngleUp /> : <FaAngleDown />}
             onClick={() => setIsExpanded(!isExpanded)}
-          />
+          >
+            {isExpanded ? <FaAngleUp /> : <FaAngleDown />}
+          </IconButton>
           <IconButton
             aria-label="visibility"
-            icon={isFolderHidden ? <FaRegEyeSlash /> : <FaRegEye />}
             onClick={() => {
               updateListItems?.(
                 "cardInstances",
@@ -148,9 +159,11 @@ const CardInstanceFolder: FC<{
                 })),
               )
             }}
-          />
+          >
+            {isFolderHidden ? <FaRegEyeSlash /> : <FaRegEye />}
+          </IconButton>
         </ButtonGroup>
-        <Heading as="h3" size="sm" noOfLines={1} flexGrow={1} color="blue.300">
+        <Heading as="h3" size="md" lineClamp={1} flexGrow={1} color="blue.300">
           {folder.name}
         </Heading>
         <ButtonGroup
@@ -161,26 +174,34 @@ const CardInstanceFolder: FC<{
           right="0"
           bg="gray.600"
         >
-          <Tooltip label="Edit" placement="top">
+          <Tooltip
+            content="Edit"
+            positioning={{
+              placement: "top",
+            }}
+          >
             <IconButton
               aria-label="edit"
-              icon={<FaPencil />}
-              colorScheme="blue"
+              colorPalette="blue"
               onClick={onFolderEdit}
-            />
+            >
+              <FaPencil />
+            </IconButton>
           </Tooltip>
         </ButtonGroup>
       </HStack>
 
-      <Stack ml="1rem" pl="calc(1rem - 1px)" borderLeft="1px solid gray">
-        {folder.items.map((cardInstance) => (
-          <CardInstanceItem
-            key={cardInstance.id}
-            cardInstance={cardInstance}
-            onEdit={onItemEdit}
-          />
-        ))}
-      </Stack>
+      {isExpanded && (
+        <Stack ml="1rem" pl="calc(1rem - 1px)" borderLeft="1px solid gray">
+          {folder.items.map((cardInstance) => (
+            <CardInstanceItem
+              key={cardInstance.id}
+              cardInstance={cardInstance}
+              onEdit={onItemEdit}
+            />
+          ))}
+        </Stack>
+      )}
     </Stack>
   )
 }
@@ -216,11 +237,11 @@ const CardInstanceSection = () => {
 
   return (
     <Stack p="1rem" bg="gray.600">
-      <Heading size="md" color="blue.300" userSelect="none">
+      <Heading size="xl" color="blue.300" userSelect="none">
         Card Instances
       </Heading>
 
-      <Divider />
+      <Separator />
 
       {folders.map((folder) => (
         <CardInstanceFolder
@@ -237,7 +258,7 @@ const CardInstanceSection = () => {
         />
       ))}
 
-      <Divider />
+      <Separator />
 
       {project.cardInstances
         .filter((cardInstance) => !cardInstance.folder)
@@ -253,13 +274,14 @@ const CardInstanceSection = () => {
         ))}
 
       <Button
-        leftIcon={<AddIcon />}
         size="sm"
+        variant="subtle"
         onClick={() => {
           setSelectedCardInstance(null)
           setActiveModalKey("EDITING")
         }}
       >
+        <LuPlus />
         Add
       </Button>
 

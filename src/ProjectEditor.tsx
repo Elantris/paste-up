@@ -77,7 +77,9 @@ function ProjectEditor() {
       </Box>
 
       <HStack flexShrink={0} justify="end" p="1rem 2rem">
-        <Button onClick={() => fileRef.current?.click()}>Import</Button>
+        <Button variant="subtle" onClick={() => fileRef.current?.click()}>
+          Import
+        </Button>
         <Input
           ref={fileRef}
           type="file"
@@ -85,7 +87,11 @@ function ProjectEditor() {
           accept="*.json"
           onChange={() => handleImport()}
         />
-        <Button disabled={isExporting} onClick={() => handleExport()}>
+        <Button
+          variant="subtle"
+          disabled={isExporting}
+          onClick={() => handleExport()}
+        >
           Export
         </Button>
       </HStack>

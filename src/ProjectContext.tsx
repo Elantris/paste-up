@@ -1,7 +1,13 @@
 import mustache from "mustache"
-import { createContext, FC, ReactNode, useEffect, useState } from "react"
-import { v4 as uuidv4 } from "uuid"
 import {
+  createContext,
+  useEffect,
+  useState,
+  type FC,
+  type ReactNode,
+} from "react"
+import { v4 as uuidv4 } from "uuid"
+import type {
   CardInstanceProps,
   CardTemplateProps,
   ListType,

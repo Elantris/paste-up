@@ -1,12 +1,10 @@
 import {
   Button,
-  Divider,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
+  Field,
   Heading,
   HStack,
   Input,
+  Separator,
   Stack,
 } from "@chakra-ui/react"
 import { useContext, useRef, useState } from "react"
@@ -53,14 +51,14 @@ const ProjectSettingSection = () => {
 
   return (
     <Stack bg="gray.600" p="1rem" userSelect="none">
-      <Heading size="md" color="blue.300">
+      <Heading size="xl" color="blue.300">
         Project Setting
       </Heading>
 
-      <Divider />
+      <Separator />
 
-      <FormControl isInvalid={!!validationErrors.name}>
-        <FormLabel>Name</FormLabel>
+      <Field.Root invalid={!!validationErrors.name}>
+        <Field.Label>Name</Field.Label>
         <Input
           ref={nameRef}
           defaultValue={project.name}
@@ -69,20 +67,22 @@ const ProjectSettingSection = () => {
             setValidationErrors((prev) => ({ ...prev, name: "" }))
           }
         />
-        <FormErrorMessage>{validationErrors.name}</FormErrorMessage>
-      </FormControl>
-      <FormControl>
-        <FormLabel>Page Class Name</FormLabel>
+        <Field.ErrorText>{validationErrors.name}</Field.ErrorText>
+      </Field.Root>
+      <Field.Root>
+        <Field.Label>Page Class Name</Field.Label>
         <Input
           ref={pageClassNameRef}
           defaultValue={project.pageClassName}
           className="font-mono"
         />
-      </FormControl>
+      </Field.Root>
 
       <HStack justify="flex-end">
-        <Button onClick={() => handleReset()}>Reset</Button>
-        <Button colorScheme="blue" onClick={() => handleSave()}>
+        <Button variant="subtle" onClick={() => handleReset()}>
+          Reset
+        </Button>
+        <Button colorPalette="blue" onClick={() => handleSave()}>
           Save
         </Button>
       </HStack>

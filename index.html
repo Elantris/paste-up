@@ -12,6 +12,10 @@
       rel="stylesheet"
     />
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chakra's styles live in CSS cascade layers. -->
+    <script>
+      tailwind.config = { corePlugins: { preflight: false } }
+    </script>
   </head>
   <body>
     <div id="root"></div>

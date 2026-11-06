@@ -2,28 +2,22 @@ import {
   Box,
   Button,
   ButtonGroup,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
+  CloseButton,
+  Dialog,
+  Field,
   Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
+  Portal,
   Stack,
-  Tooltip,
 } from "@chakra-ui/react"
 import { html as htmlLanguage } from "@codemirror/lang-html"
 import { materialDark } from "@uiw/codemirror-theme-material"
 import ReactCodeMirror from "@uiw/react-codemirror"
 import html from "prettier/plugins/html"
 import prettier from "prettier/standalone"
-import { FC, useContext, useEffect, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState, type FC } from "react"
+import { Tooltip } from "./components/ui/tooltip"
 import ProjectContext from "./ProjectContext"
-import { CardTemplateProps } from "./types"
+import type { CardTemplateProps } from "./types"
 
 const CardTemplateEditModal: FC<{
   isOpen: boolean
@@ -119,72 +113,96 @@ const CardTemplateEditModal: FC<{
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={() => handleClose()} size="xl" isCentered>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Edit Card Template</ModalHeader>
-        <ModalCloseButton />
+    <Dialog.Root
+      open={isOpen}
+      size="xl"
+      placement="center"
+      onOpenChange={(e) => {
+        if (!e.open) {
+          handleClose()
+        }
+      }}
+    >
+      <Portal>
+        <Dialog.Backdrop />
+        <Dialog.Positioner>
+          <Dialog.Content>
+            <Dialog.Header>
+              <Dialog.Title>Edit Card Template</Dialog.Title>
+            </Dialog.Header>
+            <Dialog.CloseTrigger asChild>
+              <CloseButton size="sm" />
+            </Dialog.CloseTrigger>
 
-        <ModalBody>
-          <Stack>
-            <FormControl isInvalid={!!validationErrors.name}>
-              <FormLabel>Name</FormLabel>
-              <Input
-                ref={nameRef}
-                defaultValue={cardTemplate?.name}
-                onFocus={() =>
-                  validationErrors.name &&
-                  setValidationErrors((prev) => ({ ...prev, name: "" }))
-                }
-              />
-              <FormErrorMessage>{validationErrors.name}</FormErrorMessage>
-            </FormControl>
+            <Dialog.Body>
+              <Stack>
+                <Field.Root invalid={!!validationErrors.name}>
+                  <Field.Label>Name</Field.Label>
+                  <Input
+                    ref={nameRef}
+                    defaultValue={cardTemplate?.name}
+                    onFocus={() =>
+                      validationErrors.name &&
+                      setValidationErrors((prev) => ({ ...prev, name: "" }))
+                    }
+                  />
+                  <Field.ErrorText>{validationErrors.name}</Field.ErrorText>
+                </Field.Root>
 
-            <FormControl isInvalid={!!validationErrors.content}>
-              <FormLabel>Content</FormLabel>
-              <Box minH="15rem">
-                <ReactCodeMirror
-                  height="15rem"
-                  theme={materialDark}
-                  extensions={[htmlLanguage({})]}
-                  value={content}
-                  onChange={(value) => setContent(value)}
-                  onFocus={() =>
-                    setValidationErrors((prev) => ({ ...prev, content: "" }))
-                  }
-                  onBlur={() => handleFormat()}
-                />
-              </Box>
-              <FormErrorMessage>{validationErrors.content}</FormErrorMessage>
-            </FormControl>
-          </Stack>
-        </ModalBody>
+                <Field.Root invalid={!!validationErrors.content}>
+                  <Field.Label>Content</Field.Label>
+                  <Box w="full" minH="15rem">
+                    <ReactCodeMirror
+                      height="15rem"
+                      theme={materialDark}
+                      extensions={[htmlLanguage({})]}
+                      value={content}
+                      onChange={(value) => setContent(value)}
+                      onFocus={() =>
+                        setValidationErrors((prev) => ({
+                          ...prev,
+                          content: "",
+                        }))
+                      }
+                      onBlur={() => handleFormat()}
+                    />
+                  </Box>
+                  <Field.ErrorText>{validationErrors.content}</Field.ErrorText>
+                </Field.Root>
+              </Stack>
+            </Dialog.Body>
 
-        <ModalFooter justifyContent="space-between">
-          {childInstanceCount ? (
-            <Tooltip
-              label={`dependencies (${childInstanceCount})`}
-              placement="right"
-            >
-              <Button colorScheme="red" disabled>
-                Delete
-              </Button>
-            </Tooltip>
-          ) : (
-            <Button colorScheme="red" onClick={() => handleDelete()}>
-              {isDeleting ? "Confirm Delete" : "Delete"}
-            </Button>
-          )}
+            <Dialog.Footer justifyContent="space-between">
+              {childInstanceCount ? (
+                <Tooltip
+                  content={`dependencies (${childInstanceCount})`}
+                  positioning={{
+                    placement: "right",
+                  }}
+                >
+                  <Button colorPalette="red" disabled>
+                    Delete
+                  </Button>
+                </Tooltip>
+              ) : (
+                <Button colorPalette="red" onClick={() => handleDelete()}>
+                  {isDeleting ? "Confirm Delete" : "Delete"}
+                </Button>
+              )}
 
-          <ButtonGroup>
-            <Button onClick={() => handleClose()}>Cancel</Button>
-            <Button colorScheme="blue" onClick={() => handleSave()}>
-              Save
-            </Button>
-          </ButtonGroup>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+              <ButtonGroup>
+                <Button variant="subtle" onClick={() => handleClose()}>
+                  Cancel
+                </Button>
+                <Button colorPalette="blue" onClick={() => handleSave()}>
+                  Save
+                </Button>
+              </ButtonGroup>
+            </Dialog.Footer>
+          </Dialog.Content>
+        </Dialog.Positioner>
+      </Portal>
+    </Dialog.Root>
   )
 }
 

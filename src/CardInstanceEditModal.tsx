@@ -2,34 +2,23 @@ import {
   Box,
   Button,
   ButtonGroup,
-  FormControl,
-  FormErrorMessage,
-  FormHelperText,
-  FormLabel,
+  CloseButton,
+  Dialog,
+  Field,
   HStack,
   Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
+  NativeSelect,
   NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  Select,
+  Portal,
   Stack,
   Tag,
 } from "@chakra-ui/react"
 import { json } from "@codemirror/lang-json"
 import { materialDark } from "@uiw/codemirror-theme-material"
 import ReactCodeMirror from "@uiw/react-codemirror"
-import { FC, useContext, useEffect, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState, type FC } from "react"
 import ProjectContext from "./ProjectContext"
-import { CardInstanceProps } from "./types"
+import type { CardInstanceProps } from "./types"
 
 const CardInstanceEditModal: FC<{
   isOpen: boolean
@@ -144,141 +133,169 @@ const CardInstanceEditModal: FC<{
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={() => handleClose()} size="xl" isCentered>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Edit Card Instance</ModalHeader>
-        <ModalCloseButton />
+    <Dialog.Root
+      open={isOpen}
+      size="xl"
+      placement="center"
+      onOpenChange={(e) => {
+        if (!e.open) {
+          handleClose()
+        }
+      }}
+    >
+      <Portal>
+        <Dialog.Backdrop />
+        <Dialog.Positioner>
+          <Dialog.Content>
+            <Dialog.Header>
+              <Dialog.Title>Edit Card Instance</Dialog.Title>
+            </Dialog.Header>
+            <Dialog.CloseTrigger asChild>
+              <CloseButton size="sm" />
+            </Dialog.CloseTrigger>
 
-        <ModalBody>
-          <Stack>
-            <FormControl isInvalid={!!validationErrors.name}>
-              <FormLabel>Name</FormLabel>
-              <Input
-                ref={nameRef}
-                defaultValue={cardInstance?.name || "Untitled"}
-                onFocus={() =>
-                  validationErrors.name &&
-                  setValidationErrors((prev) => ({ ...prev, name: "" }))
-                }
-              />
-              <FormErrorMessage>{validationErrors.name}</FormErrorMessage>
-            </FormControl>
+            <Dialog.Body>
+              <Stack>
+                <Field.Root invalid={!!validationErrors.name}>
+                  <Field.Label>Name</Field.Label>
+                  <Input
+                    ref={nameRef}
+                    defaultValue={cardInstance?.name || "Untitled"}
+                    onFocus={() =>
+                      validationErrors.name &&
+                      setValidationErrors((prev) => ({ ...prev, name: "" }))
+                    }
+                  />
+                  <Field.ErrorText>{validationErrors.name}</Field.ErrorText>
+                </Field.Root>
 
-            <FormControl isInvalid={!!validationErrors.folder}>
-              <FormLabel>Folder</FormLabel>
-              <Input
-                ref={folderRef}
-                defaultValue={cardInstance?.folder || ""}
-                onFocus={() =>
-                  validationErrors.folder &&
-                  setValidationErrors((prev) => ({ ...prev, folder: "" }))
-                }
-              />
-              {!!folderNames.size && (
-                <FormHelperText>
-                  <HStack flexWrap="wrap">
-                    {Array.from(folderNames).map((folderName) => (
-                      <Tag
-                        key={folderName}
-                        cursor="pointer"
-                        onClick={() =>
-                          folderRef.current &&
-                          (folderRef.current.value = folderName)
-                        }
-                      >
-                        {folderName}
-                      </Tag>
-                    ))}
-                  </HStack>
-                </FormHelperText>
+                <Field.Root invalid={!!validationErrors.folder}>
+                  <Field.Label>Folder</Field.Label>
+                  <Input
+                    ref={folderRef}
+                    defaultValue={cardInstance?.folder || ""}
+                    onFocus={() =>
+                      validationErrors.folder &&
+                      setValidationErrors((prev) => ({ ...prev, folder: "" }))
+                    }
+                  />
+                  {!!folderNames.size && (
+                    <Field.HelperText>
+                      <HStack flexWrap="wrap">
+                        {Array.from(folderNames).map((folderName) => (
+                          <Tag.Root
+                            key={folderName}
+                            cursor="pointer"
+                            onClick={() =>
+                              folderRef.current &&
+                              (folderRef.current.value = folderName)
+                            }
+                          >
+                            <Tag.Label>{folderName}</Tag.Label>
+                          </Tag.Root>
+                        ))}
+                      </HStack>
+                    </Field.HelperText>
+                  )}
+
+                  <Field.ErrorText>{validationErrors.folder}</Field.ErrorText>
+                </Field.Root>
+
+                <Field.Root invalid={!!validationErrors.cardTemplateId}>
+                  <Field.Label>Template</Field.Label>
+                  <NativeSelect.Root>
+                    <NativeSelect.Field
+                      ref={cardTemplateIdRef}
+                      defaultValue={cardInstance?.cardTemplateId}
+                      onFocus={() =>
+                        validationErrors.cardTemplateId &&
+                        setValidationErrors((prev) => ({
+                          ...prev,
+                          cardTemplateId: "",
+                        }))
+                      }
+                    >
+                      {project?.cardTemplates.map((cardTemplate, index) => (
+                        <option key={cardTemplate.id} value={cardTemplate.id}>
+                          {index + 1}. {cardTemplate.name}
+                        </option>
+                      ))}
+                    </NativeSelect.Field>
+                    <NativeSelect.Indicator />
+                  </NativeSelect.Root>
+                  <Field.ErrorText>
+                    {validationErrors.cardTemplateId}
+                  </Field.ErrorText>
+                </Field.Root>
+
+                <Field.Root invalid={!!validationErrors.attributes}>
+                  <Field.Label>Attributes</Field.Label>
+                  <Box w="full" minH="15rem">
+                    <ReactCodeMirror
+                      height="15rem"
+                      theme={materialDark}
+                      extensions={[json()]}
+                      value={attributes}
+                      onChange={(value) => setAttributes(value)}
+                      onFocus={() =>
+                        setValidationErrors((prev) => ({
+                          ...prev,
+                          attributes: "",
+                        }))
+                      }
+                      onBlur={() => handleFormat()}
+                    />
+                  </Box>
+                  <Field.ErrorText>
+                    {validationErrors.attributes}
+                  </Field.ErrorText>
+                </Field.Root>
+
+                <Field.Root invalid={!!validationErrors.amount}>
+                  <Field.Label>Amount</Field.Label>
+                  <NumberInput.Root
+                    w="full"
+                    min={1}
+                    step={1}
+                    formatOptions={{ maximumFractionDigits: 0 }}
+                    defaultValue={`${cardInstance?.amount || 1}`}
+                    onFocus={() =>
+                      validationErrors.amount &&
+                      setValidationErrors((prev) => ({ ...prev, amount: "" }))
+                    }
+                  >
+                    <NumberInput.Input ref={amountRef} />
+                    <NumberInput.Control>
+                      <NumberInput.IncrementTrigger />
+                      <NumberInput.DecrementTrigger />
+                    </NumberInput.Control>
+                  </NumberInput.Root>
+                  <Field.ErrorText>{validationErrors.amount}</Field.ErrorText>
+                </Field.Root>
+              </Stack>
+            </Dialog.Body>
+
+            <Dialog.Footer justifyContent="space-between">
+              {cardInstance ? (
+                <Button colorPalette="red" onClick={() => handleDelete()}>
+                  {isDeleting ? "Confirm deletion" : "Delete"}
+                </Button>
+              ) : (
+                <div />
               )}
-
-              <FormErrorMessage>{validationErrors.folder}</FormErrorMessage>
-            </FormControl>
-
-            <FormControl isInvalid={!!validationErrors.cardTemplateId}>
-              <FormLabel>Template</FormLabel>
-              <Select
-                ref={cardTemplateIdRef}
-                defaultValue={cardInstance?.cardTemplateId}
-                onFocus={() =>
-                  validationErrors.cardTemplateId &&
-                  setValidationErrors((prev) => ({
-                    ...prev,
-                    cardTemplateId: "",
-                  }))
-                }
-              >
-                {project?.cardTemplates.map((cardTemplate, index) => (
-                  <option key={cardTemplate.id} value={cardTemplate.id}>
-                    {index + 1}. {cardTemplate.name}
-                  </option>
-                ))}
-              </Select>
-              <FormErrorMessage>
-                {validationErrors.cardTemplateId}
-              </FormErrorMessage>
-            </FormControl>
-
-            <FormControl isInvalid={!!validationErrors.attributes}>
-              <FormLabel>Attributes</FormLabel>
-              <Box minH="15rem">
-                <ReactCodeMirror
-                  height="15rem"
-                  theme={materialDark}
-                  extensions={[json()]}
-                  value={attributes}
-                  onChange={(value) => setAttributes(value)}
-                  onFocus={() =>
-                    setValidationErrors((prev) => ({ ...prev, attributes: "" }))
-                  }
-                  onBlur={() => handleFormat()}
-                />
-              </Box>
-              <FormErrorMessage>{validationErrors.attributes}</FormErrorMessage>
-            </FormControl>
-
-            <FormControl isInvalid={!!validationErrors.amount}>
-              <FormLabel>Amount</FormLabel>
-              <NumberInput
-                min={1}
-                step={1}
-                precision={0}
-                defaultValue={`${cardInstance?.amount || 1}`}
-                onFocus={() =>
-                  validationErrors.amount &&
-                  setValidationErrors((prev) => ({ ...prev, amount: "" }))
-                }
-              >
-                <NumberInputField ref={amountRef} />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
-              <FormErrorMessage>{validationErrors.amount}</FormErrorMessage>
-            </FormControl>
-          </Stack>
-        </ModalBody>
-
-        <ModalFooter justifyContent="space-between">
-          {cardInstance ? (
-            <Button colorScheme="red" onClick={() => handleDelete()}>
-              {isDeleting ? "Confirm deletion" : "Delete"}
-            </Button>
-          ) : (
-            <div />
-          )}
-          <ButtonGroup>
-            <Button onClick={() => handleClose()}>Cancel</Button>
-            <Button colorScheme="blue" onClick={() => handleSave()}>
-              {cardInstance ? "Save" : "Create"}
-            </Button>
-          </ButtonGroup>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+              <ButtonGroup>
+                <Button variant="subtle" onClick={() => handleClose()}>
+                  Cancel
+                </Button>
+                <Button colorPalette="blue" onClick={() => handleSave()}>
+                  {cardInstance ? "Save" : "Create"}
+                </Button>
+              </ButtonGroup>
+            </Dialog.Footer>
+          </Dialog.Content>
+        </Dialog.Positioner>
+      </Portal>
+    </Dialog.Root>
   )
 }
 
