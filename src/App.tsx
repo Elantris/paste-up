@@ -1,4 +1,5 @@
-import { Box, Flex, Heading, HStack, Image } from "@chakra-ui/react"
+import { Box, Flex, Heading, HStack, Image, Spacer } from "@chakra-ui/react"
+import InstructionModal from "./InstructionModal"
 import ProjectEditor from "./ProjectEditor"
 import ProjectPreview from "./ProjectPreview"
 
@@ -9,6 +10,7 @@ function App() {
         <HStack
           as="header"
           height="3rem"
+          pe="0.5rem"
           colorPalette="brand"
           bg="colorPalette.solid"
           color="colorPalette.contrast"
@@ -27,6 +29,9 @@ function App() {
           <Heading as="h1" size="2xl">
             Paste Up!
           </Heading>
+
+          <Spacer />
+          <InstructionModal />
         </HStack>
 
         <Flex grow={1} overflow="hidden">
