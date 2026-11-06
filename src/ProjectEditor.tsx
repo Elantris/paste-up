@@ -9,7 +9,7 @@ import ProjectSettingSection from "./ProjectSettingSection"
 function ProjectEditor() {
   const fileRef = useRef<HTMLInputElement>(null)
   const { project, handleProjectChange } = useContext(ProjectContext)
-  const [isLoading, setIsLoading] = useState(false)
+  const [importCount, setImportCount] = useState(0)
   const [isExporting, setIsExporting] = useState(false)
 
   if (!project) {
@@ -31,11 +31,8 @@ function ProjectEditor() {
         if (typeof json !== "object") {
           return
         }
-        setIsLoading(true)
         handleProjectChange?.(json)
-        setTimeout(() => {
-          setIsLoading(false)
-        })
+        setImportCount((count) => count + 1)
       } catch (error) {
         console.error(error)
       }
@@ -67,15 +64,11 @@ function ProjectEditor() {
   return (
     <>
       <Box flexGrow={1} p="1rem" overflowY="auto">
-        {isLoading ? (
-          <Loading />
-        ) : (
-          <Flex direction="column" gap="1rem">
-            <ProjectSettingSection />
-            <CardTemplateSection />
-            <CardInstanceSection />
-          </Flex>
-        )}
+        <Flex key={importCount} direction="column" gap="1rem">
+          <ProjectSettingSection />
+          <CardTemplateSection />
+          <CardInstanceSection />
+        </Flex>
       </Box>
 
       <HStack flexShrink={0} justify="end" p="1rem 2rem">

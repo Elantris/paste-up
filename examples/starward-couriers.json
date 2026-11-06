@@ -1,0 +1,182 @@
+{
+  "id": "a448e481-5fd4-408e-8961-7ec1627d6ba0",
+  "name": "星際快遞 Starward Couriers",
+  "pageClassName": "flex flex-wrap content-start gap-[2mm]",
+  "cardTemplates": [
+    {
+      "id": "7f1a3abc-a610-4231-9542-64a3a6621f58",
+      "name": "事件卡 Event",
+      "content": "<div class=\"flex h-[46mm] w-[64mm] flex-col border border-dashed border-indigo-400 bg-[#f3f4fb] p-[2.5mm] text-[7.5pt] leading-snug text-slate-900\">\n  <div class=\"flex items-baseline justify-between gap-[1mm]\">\n    <span class=\"text-[11pt] font-bold text-indigo-900\">{{title}}</span>\n    <span class=\"text-[5.5pt] text-slate-400\">{{code}}</span>\n  </div>\n  <div class=\"text-[6pt] uppercase tracking-wide text-slate-400\">{{original}}</div>\n  {{#flavor}}\n  <div class=\"mt-[1.5mm] italic text-slate-600\">{{flavor}}</div>\n  {{/flavor}}\n  <div class=\"mt-auto border-t border-indigo-200 pt-[1.5mm]\">{{{effect}}}</div>\n</div>"
+    },
+    {
+      "id": "e4ff6eb5-30d5-4f02-99e2-5ab38cc76675",
+      "name": "玩家輔助卡 Player aid",
+      "content": "<div class=\"flex h-[86mm] w-[58mm] flex-col border border-dashed border-indigo-400 bg-white p-[3mm] text-[7.5pt] leading-snug text-slate-900\">\n  <div class=\"border-b border-indigo-300 pb-[1mm] text-center\">\n    <div class=\"text-[11pt] font-bold text-indigo-900\">{{title}}</div>\n    <div class=\"text-[5.5pt] text-slate-400\">{{original}} · {{code}}</div>\n  </div>\n  <div class=\"mt-[2mm]\">{{{steps}}}</div>\n  <div class=\"mt-auto text-[6.5pt] text-slate-500\">{{{note}}}</div>\n</div>"
+    }
+  ],
+  "cardInstances": [
+    {
+      "id": "1bd58a33-64fa-44c1-b594-fcb8d76b5cc9",
+      "name": "小行星帶 Asteroid Field",
+      "cardTemplateId": "7f1a3abc-a610-4231-9542-64a3a6621f58",
+      "attributes": {
+        "code": "SC-C03",
+        "title": "小行星帶",
+        "original": "Asteroid Field",
+        "effect": "本輪中，穿越<b>小行星帶</b>的移動需額外消耗 1 燃料。"
+      },
+      "amount": 1,
+      "isHidden": false,
+      "folder": "危機事件 Crisis events"
+    },
+    {
+      "id": "e676c3b7-f0a6-4910-95ee-625dfc7d1c1e",
+      "name": "引擎故障 Engine Failure",
+      "cardTemplateId": "7f1a3abc-a610-4231-9542-64a3a6621f58",
+      "attributes": {
+        "code": "SC-C01",
+        "title": "引擎故障",
+        "original": "Engine Failure",
+        "flavor": "那個聲音……不太對勁。",
+        "effect": "燃料最多的玩家失去 2 燃料；若有平手，平手的玩家各失去 1 燃料。"
+      },
+      "amount": 1,
+      "isHidden": false,
+      "folder": "危機事件 Crisis events"
+    },
+    {
+      "id": "15da218a-0de6-4928-a672-4e3eb8e8d8bb",
+      "name": "海盜伏擊 Pirate Ambush",
+      "cardTemplateId": "7f1a3abc-a610-4231-9542-64a3a6621f58",
+      "attributes": {
+        "code": "SC-C02",
+        "title": "海盜伏擊",
+        "original": "Pirate Ambush",
+        "flavor": "他們的旗幟是一張被劃掉的發票。",
+        "effect": "位於<b>邊境星區</b>的玩家各擲 1 顆骰子，結果為 1–3 時失去 1 件貨物。"
+      },
+      "amount": 2,
+      "isHidden": false,
+      "folder": "危機事件 Crisis events"
+    },
+    {
+      "id": "b0ee4e51-80c4-4634-bdda-2db900cbbebb",
+      "name": "碼頭罷工 Dock Strike",
+      "cardTemplateId": "7f1a3abc-a610-4231-9542-64a3a6621f58",
+      "attributes": {
+        "code": "SC-C04",
+        "title": "碼頭罷工",
+        "original": "Dock Strike",
+        "flavor": "工會要求更好的保險，以及更好的咖啡。",
+        "effect": "本輪中，任何太空站都無法裝載或卸載貨物。"
+      },
+      "amount": 1,
+      "isHidden": false,
+      "folder": "危機事件 Crisis events"
+    },
+    {
+      "id": "6c025855-5a26-43fd-9e72-32147ad76ac0",
+      "name": "回合流程 Round Overview",
+      "cardTemplateId": "e4ff6eb5-30d5-4f02-99e2-5ab38cc76675",
+      "attributes": {
+        "code": "SC-A01",
+        "title": "回合流程",
+        "original": "Round Overview",
+        "steps": "<ol class=\"list-decimal space-y-[1.2mm] pl-[4mm]\">\n  <li><b>事件</b>：翻開 1 張航線事件卡並執行。</li>\n  <li><b>航行</b>：每位玩家依序移動飛船，每移動 1 格消耗 1 燃料。</li>\n  <li><b>交易</b>：在太空站裝載或卸載貨物，並完成訂單。</li>\n  <li><b>維修</b>：每支付 2 信用點，修復 1 點船體損傷。</li>\n  <li><b>危機</b>：危機標記達到 3 個時，翻開 1 張危機事件卡，然後移除所有危機標記。</li>\n</ol>",
+        "note": "每輪結束時，將起始玩家標記交給左手邊的玩家。第 8 輪結束後，信用點最多的玩家獲勝。"
+      },
+      "amount": 4,
+      "isHidden": false,
+      "folder": "玩家輔助 Player aids"
+    },
+    {
+      "id": "42f12499-b7e7-4e87-ac1c-e1407159c0ea",
+      "name": "太陽風暴 Solar Storm",
+      "cardTemplateId": "7f1a3abc-a610-4231-9542-64a3a6621f58",
+      "attributes": {
+        "code": "SC-E01",
+        "title": "太陽風暴",
+        "original": "Solar Storm",
+        "flavor": "儀表板全亮起紅燈，只有咖啡機還在運作。",
+        "effect": "直到本輪結束，所有飛船的移動距離 -1。"
+      },
+      "amount": 1,
+      "isHidden": false,
+      "folder": "航線事件 Route events"
+    },
+    {
+      "id": "7ed62919-edf3-48db-abb6-2b2704b0e838",
+      "name": "海關臨檢 Customs Sweep",
+      "cardTemplateId": "7f1a3abc-a610-4231-9542-64a3a6621f58",
+      "attributes": {
+        "code": "SC-E04",
+        "title": "海關臨檢",
+        "original": "Customs Sweep",
+        "flavor": "表格一式三份，耐心一份也沒有。",
+        "effect": "攜帶<b>違禁貨物</b>的玩家各棄掉 1 件貨物，或支付 3 信用點。"
+      },
+      "amount": 2,
+      "isHidden": false,
+      "folder": "航線事件 Route events"
+    },
+    {
+      "id": "aec4ec18-af47-4d07-a713-9bd4a581cade",
+      "name": "貨運加急 Rush Order",
+      "cardTemplateId": "7f1a3abc-a610-4231-9542-64a3a6621f58",
+      "attributes": {
+        "code": "SC-E06",
+        "title": "貨運加急",
+        "original": "Rush Order",
+        "flavor": "客戶說「今天」，意思是「昨天」。",
+        "effect": "揭示 1 張新訂單。在本輪結束前完成它的玩家額外獲得 3 信用點。"
+      },
+      "amount": 1,
+      "isHidden": false,
+      "folder": "航線事件 Route events"
+    },
+    {
+      "id": "8f6214e7-edc5-41ca-906c-a1de780d5065",
+      "name": "迷途信標 Lost Beacon",
+      "cardTemplateId": "7f1a3abc-a610-4231-9542-64a3a6621f58",
+      "attributes": {
+        "code": "SC-E03",
+        "title": "迷途信標",
+        "original": "Lost Beacon",
+        "flavor": "訊號斷斷續續，但確實在求救。",
+        "effect": "第一位移動到<b>邊境星區</b>的玩家獲得 1 枚聲望標記。"
+      },
+      "amount": 1,
+      "isHidden": false,
+      "folder": "航線事件 Route events"
+    },
+    {
+      "id": "d0c8efdf-2851-4675-94da-6fee237650f5",
+      "name": "順風航道 Tailwind Lane",
+      "cardTemplateId": "7f1a3abc-a610-4231-9542-64a3a6621f58",
+      "attributes": {
+        "code": "SC-E05",
+        "title": "順風航道",
+        "original": "Tailwind Lane",
+        "effect": "本輪中，穿越<b>星門</b>不需要消耗燃料。"
+      },
+      "amount": 1,
+      "isHidden": false,
+      "folder": "航線事件 Route events"
+    },
+    {
+      "id": "a4627987-a774-434c-ad72-59ca908137f0",
+      "name": "黑市燃料 Black-Market Fuel",
+      "cardTemplateId": "7f1a3abc-a610-4231-9542-64a3a6621f58",
+      "attributes": {
+        "code": "SC-E02",
+        "title": "黑市燃料",
+        "original": "Black-Market Fuel",
+        "flavor": "「別問來源，問就是加價。」",
+        "effect": "每位玩家可以支付 2 信用點，獲得 2 燃料。"
+      },
+      "amount": 2,
+      "isHidden": false,
+      "folder": "航線事件 Route events"
+    }
+  ]
+}

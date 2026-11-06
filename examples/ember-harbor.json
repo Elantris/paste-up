@@ -1,0 +1,201 @@
+{
+  "id": "4e89edba-0d05-4523-aa66-ddd7ecef80cc",
+  "name": "餘燼港 Ember Harbor",
+  "pageClassName": "",
+  "cardTemplates": [
+    {
+      "id": "97db3270-4dff-4d8e-872f-129b03e39b37",
+      "name": "規則框 Rules box",
+      "content": "<div class=\"relative h-[32mm] w-[56mm] overflow-hidden border border-dashed border-stone-500 bg-[#f6ecd7] px-[2mm] py-[1.5mm] text-[7.5pt] leading-snug text-stone-900\">\n  <div class=\"flex items-baseline justify-between gap-[1mm] border-b border-stone-400 pb-[0.5mm]\">\n    <span class=\"text-[10pt] font-bold\">{{title}}</span>\n    <span class=\"text-[5.5pt] text-stone-500\">{{original}} · {{code}}</span>\n  </div>\n  <div class=\"mt-[1mm]\">{{{effect}}}</div>\n  {{#flavor}}\n  <div class=\"absolute inset-x-[2mm] bottom-[1.2mm] text-[6.5pt] italic text-stone-600\">{{flavor}}</div>\n  {{/flavor}}\n</div>"
+    }
+  ],
+  "cardInstances": [
+    {
+      "id": "5dbe76dc-82f9-40f0-9561-c85a8d92551a",
+      "name": "幽靈船 Ghost Ship",
+      "cardTemplateId": "97db3270-4dff-4d8e-872f-129b03e39b37",
+      "attributes": {
+        "code": "EH-P01",
+        "title": "幽靈船",
+        "original": "Ghost Ship",
+        "effect": "+2 金幣。<br>將此牌放回你的牌庫頂。",
+        "flavor": "沒有人登記過它的入港。"
+      },
+      "amount": 1,
+      "isHidden": true,
+      "folder": "宣傳卡 Promo"
+    },
+    {
+      "id": "356edf1c-5464-4678-969b-177c98727b6f",
+      "name": "喚潮者 Tide Caller",
+      "cardTemplateId": "97db3270-4dff-4d8e-872f-129b03e39b37",
+      "attributes": {
+        "code": "EH-016",
+        "title": "喚潮者",
+        "original": "Tide Caller",
+        "effect": "抽 1 張牌。<br><b>停泊</b>：你的下個回合開始時，抽 1 張牌。"
+      },
+      "amount": 2,
+      "isHidden": false,
+      "folder": "市場牌 Market"
+    },
+    {
+      "id": "e445172f-9691-4983-ae2f-60615178087d",
+      "name": "夜市 Night Market",
+      "cardTemplateId": "97db3270-4dff-4d8e-872f-129b03e39b37",
+      "attributes": {
+        "code": "EH-018",
+        "title": "夜市",
+        "original": "Night Market",
+        "effect": "+1 金幣。<br>本回合中，你每購買 1 張牌，+1 金幣。"
+      },
+      "amount": 2,
+      "isHidden": false,
+      "folder": "市場牌 Market"
+    },
+    {
+      "id": "a0f967fc-2060-401b-b758-83f69ff5db74",
+      "name": "打撈隊 Salvage Crew",
+      "cardTemplateId": "97db3270-4dff-4d8e-872f-129b03e39b37",
+      "attributes": {
+        "code": "EH-015",
+        "title": "打撈隊",
+        "original": "Salvage Crew",
+        "effect": "從你的棄牌堆選擇 1 張牌，將它加入手牌。"
+      },
+      "amount": 2,
+      "isHidden": false,
+      "folder": "市場牌 Market"
+    },
+    {
+      "id": "07ab52d3-1cff-4f81-b57e-de69878726d4",
+      "name": "暴風警報 Storm Warning",
+      "cardTemplateId": "97db3270-4dff-4d8e-872f-129b03e39b37",
+      "attributes": {
+        "code": "EH-014",
+        "title": "暴風警報",
+        "original": "Storm Warning",
+        "effect": "每位其他玩家選擇並棄掉 1 張手牌。",
+        "flavor": "鐘聲響起時，沒人顧得上貨物。"
+      },
+      "amount": 2,
+      "isHidden": false,
+      "folder": "市場牌 Market"
+    },
+    {
+      "id": "3818710e-7b0e-4076-9bff-832b0f94cf8a",
+      "name": "海關稽查員 Customs Inspector",
+      "cardTemplateId": "97db3270-4dff-4d8e-872f-129b03e39b37",
+      "attributes": {
+        "code": "EH-017",
+        "title": "海關稽查員",
+        "original": "Customs Inspector",
+        "effect": "查看你牌庫頂的 3 張牌，<b>銷毀</b>其中 1 張，其餘以任意順序放回。"
+      },
+      "amount": 2,
+      "isHidden": false,
+      "folder": "市場牌 Market"
+    },
+    {
+      "id": "c45c2f44-ba6d-47e6-bdc3-0684efc96d78",
+      "name": "港務長 Harbor Master",
+      "cardTemplateId": "97db3270-4dff-4d8e-872f-129b03e39b37",
+      "attributes": {
+        "code": "EH-013",
+        "title": "港務長",
+        "original": "Harbor Master",
+        "effect": "本回合中，你購買的下一張牌費用 -2（最低為 0）。"
+      },
+      "amount": 1,
+      "isHidden": false,
+      "folder": "市場牌 Market"
+    },
+    {
+      "id": "ead65dd0-ec3e-4e69-bf43-d9ee0fed14f0",
+      "name": "灰燼大帆船 Cinder Galleon",
+      "cardTemplateId": "97db3270-4dff-4d8e-872f-129b03e39b37",
+      "attributes": {
+        "code": "EH-019",
+        "title": "灰燼大帆船",
+        "original": "Cinder Galleon",
+        "effect": "+4 金幣。<br>遊戲結束時，此牌價值 2 分。",
+        "flavor": "船身焦黑，帆依然鼓滿。"
+      },
+      "amount": 1,
+      "isHidden": false,
+      "folder": "市場牌 Market"
+    },
+    {
+      "id": "4a630727-9785-439f-9049-78be1d237b21",
+      "name": "燈塔看守人 Lighthouse Keeper",
+      "cardTemplateId": "97db3270-4dff-4d8e-872f-129b03e39b37",
+      "attributes": {
+        "code": "EH-011",
+        "title": "燈塔看守人",
+        "original": "Lighthouse Keeper",
+        "effect": "抽 2 張牌，然後棄掉 1 張牌。",
+        "flavor": "「他看得見霧裡的每一艘船。」"
+      },
+      "amount": 2,
+      "isHidden": false,
+      "folder": "市場牌 Market"
+    },
+    {
+      "id": "7d6d19f2-f89d-403f-8301-680dcb9e920d",
+      "name": "走私者海灣 Smuggler's Cove",
+      "cardTemplateId": "97db3270-4dff-4d8e-872f-129b03e39b37",
+      "attributes": {
+        "code": "EH-012",
+        "title": "走私者海灣",
+        "original": "Smuggler's Cove",
+        "effect": "<b>停泊</b>：你的下個回合開始時，+3 金幣。"
+      },
+      "amount": 2,
+      "isHidden": false,
+      "folder": "市場牌 Market"
+    },
+    {
+      "id": "4a44e155-e20c-4333-97e8-b491fc05b65a",
+      "name": "餘燼商人 Ember Merchant",
+      "cardTemplateId": "97db3270-4dff-4d8e-872f-129b03e39b37",
+      "attributes": {
+        "code": "EH-010",
+        "title": "餘燼商人",
+        "original": "Ember Merchant",
+        "effect": "+2 金幣。<br>你可以<b>銷毀</b>手牌中的 1 張牌。",
+        "flavor": "「港口的火從未熄滅，物價也一樣。」"
+      },
+      "amount": 2,
+      "isHidden": false,
+      "folder": "市場牌 Market"
+    },
+    {
+      "id": "a9b69390-265c-4f01-8e33-95be53a54d41",
+      "name": "甲板水手 Deckhand",
+      "cardTemplateId": "97db3270-4dff-4d8e-872f-129b03e39b37",
+      "attributes": {
+        "code": "EH-002",
+        "title": "甲板水手",
+        "original": "Deckhand",
+        "effect": "抽 1 張牌。"
+      },
+      "amount": 8,
+      "isHidden": false,
+      "folder": "起始牌 Starter"
+    },
+    {
+      "id": "44ad4024-a76d-40f9-a5b6-794af4879160",
+      "name": "碼頭工頭 Dock Foreman",
+      "cardTemplateId": "97db3270-4dff-4d8e-872f-129b03e39b37",
+      "attributes": {
+        "code": "EH-003",
+        "title": "碼頭工頭",
+        "original": "Dock Foreman",
+        "effect": "+1 金幣。<br>若你本回合已打出<b>甲板水手</b>，再 +1 金幣。"
+      },
+      "amount": 4,
+      "isHidden": false,
+      "folder": "起始牌 Starter"
+    }
+  ]
+}

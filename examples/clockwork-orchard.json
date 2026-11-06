@@ -1,0 +1,226 @@
+{
+  "id": "1d659d7b-c5b7-4aed-adbe-c1988d44e3f1",
+  "name": "發條果園 Clockwork Orchard",
+  "pageClassName": "",
+  "cardTemplates": [
+    {
+      "id": "3ed8f7ff-0253-4d80-8d67-fbc3231dcf70",
+      "name": "能力條 Ability strip",
+      "content": "<div class=\"flex h-[13mm] w-[60mm] overflow-hidden border border-dashed border-emerald-800 bg-white text-[7pt] leading-tight text-neutral-900\">\n  <div class=\"flex w-[11mm] shrink-0 items-center justify-center bg-emerald-700 text-center text-[8pt] font-bold text-white\">{{trigger}}</div>\n  <div class=\"flex min-w-0 flex-1 flex-col justify-center px-[1.5mm]\">\n    <div class=\"flex items-baseline justify-between gap-[1mm]\">\n      <span class=\"text-[8pt] font-bold\">{{title}}</span>\n      <span class=\"truncate text-[5pt] text-neutral-400\">{{original}} · {{code}}</span>\n    </div>\n    <div>{{{effect}}}</div>\n  </div>\n</div>"
+    },
+    {
+      "id": "3be5de2a-f65f-4963-b6aa-ba424cbf626d",
+      "name": "目標卡 Objective",
+      "content": "<div class=\"flex h-[24mm] w-[62mm] flex-col justify-center border border-dashed border-amber-700 bg-amber-50 px-[3mm] text-center text-[7.5pt] leading-snug text-neutral-900\">\n  <div class=\"text-[10pt] font-bold text-amber-900\">{{title}}</div>\n  <div class=\"text-[5.5pt] text-amber-700\">{{original}} · {{code}}</div>\n  <div class=\"mt-[1mm]\">{{{effect}}}</div>\n</div>"
+    }
+  ],
+  "cardInstances": [
+    {
+      "id": "26f1e627-80ae-4af9-a1a6-5482a7378690",
+      "name": "四季輪轉 Turning Seasons",
+      "cardTemplateId": "3be5de2a-f65f-4963-b6aa-ba424cbf626d",
+      "attributes": {
+        "code": "CO-O3",
+        "title": "四季輪轉",
+        "original": "Turning Seasons",
+        "effect": "第一位擁有三個時期卡片的玩家立即獲得 4 分。"
+      },
+      "amount": 1,
+      "isHidden": false,
+      "folder": "目標 Objectives"
+    },
+    {
+      "id": "fa568f27-9960-4c8f-9966-fe1ccd839cfb",
+      "name": "精密工藝 Precision Craft",
+      "cardTemplateId": "3be5de2a-f65f-4963-b6aa-ba424cbf626d",
+      "attributes": {
+        "code": "CO-O2",
+        "title": "精密工藝",
+        "original": "Precision Craft",
+        "effect": "遊戲結束時，<b>機械</b>卡最多的玩家獲得 6 分。"
+      },
+      "amount": 1,
+      "isHidden": false,
+      "folder": "目標 Objectives"
+    },
+    {
+      "id": "cce380ed-61e9-4238-9365-ef9df0d2d715",
+      "name": "豐收之年 Bountiful Year",
+      "cardTemplateId": "3be5de2a-f65f-4963-b6aa-ba424cbf626d",
+      "attributes": {
+        "code": "CO-O1",
+        "title": "豐收之年",
+        "original": "Bountiful Year",
+        "effect": "遊戲結束時，蘋果最多的玩家獲得 6 分；第二多的玩家獲得 3 分。"
+      },
+      "amount": 1,
+      "isHidden": false,
+      "folder": "目標 Objectives"
+    },
+    {
+      "id": "410cfba0-37ff-4372-86b2-35bb4e3991f3",
+      "name": "蒸汽灑水器 Steam Sprinkler",
+      "cardTemplateId": "3ed8f7ff-0253-4d80-8d67-fbc3231dcf70",
+      "attributes": {
+        "trigger": "持續",
+        "code": "CO-102",
+        "title": "蒸汽灑水器",
+        "original": "Steam Sprinkler",
+        "effect": "你的果樹卡收成時，額外獲得 1 水。"
+      },
+      "amount": 2,
+      "isHidden": false,
+      "folder": "第一期 Tier I"
+    },
+    {
+      "id": "0d83a081-f8c5-4f37-96f1-6e58e368a349",
+      "name": "發條稻草人 Clockwork Scarecrow",
+      "cardTemplateId": "3ed8f7ff-0253-4d80-8d67-fbc3231dcf70",
+      "attributes": {
+        "trigger": "立即",
+        "code": "CO-103",
+        "title": "發條稻草人",
+        "original": "Clockwork Scarecrow",
+        "effect": "移除市場上 1 張卡片，並從牌庫補滿市場。"
+      },
+      "amount": 1,
+      "isHidden": false,
+      "folder": "第一期 Tier I"
+    },
+    {
+      "id": "c59487d5-3a07-492a-8969-94b12336098f",
+      "name": "銅葉蘋果樹 Copperleaf Apple",
+      "cardTemplateId": "3ed8f7ff-0253-4d80-8d67-fbc3231dcf70",
+      "attributes": {
+        "trigger": "收成",
+        "code": "CO-104",
+        "title": "銅葉蘋果樹",
+        "original": "Copperleaf Apple",
+        "effect": "獲得 2 蘋果。"
+      },
+      "amount": 3,
+      "isHidden": false,
+      "folder": "第一期 Tier I"
+    },
+    {
+      "id": "91752766-4697-45ab-aa08-8a723c641f3c",
+      "name": "齒輪蜂巢 Gear Hive",
+      "cardTemplateId": "3ed8f7ff-0253-4d80-8d67-fbc3231dcf70",
+      "attributes": {
+        "trigger": "收成",
+        "code": "CO-101",
+        "title": "齒輪蜂巢",
+        "original": "Gear Hive",
+        "effect": "獲得 1 蜂蜜。若你有 2 張以上<b>機械</b>卡，改為獲得 2 蜂蜜。"
+      },
+      "amount": 2,
+      "isHidden": false,
+      "folder": "第一期 Tier I"
+    },
+    {
+      "id": "266c343d-bf11-42ae-8c9c-da63acc0c516",
+      "name": "時計日晷 Chrono Sundial",
+      "cardTemplateId": "3ed8f7ff-0253-4d80-8d67-fbc3231dcf70",
+      "attributes": {
+        "trigger": "終局",
+        "code": "CO-303",
+        "title": "時計日晷",
+        "original": "Chrono Sundial",
+        "effect": "若你擁有三個時期的卡片各至少 1 張，獲得 5 分。"
+      },
+      "amount": 1,
+      "isHidden": false,
+      "folder": "第三期 Tier III"
+    },
+    {
+      "id": "ced13253-ece5-477d-8207-0be6f68cee73",
+      "name": "溫室穹頂 Greenhouse Dome",
+      "cardTemplateId": "3ed8f7ff-0253-4d80-8d67-fbc3231dcf70",
+      "attributes": {
+        "trigger": "終局",
+        "code": "CO-302",
+        "title": "溫室穹頂",
+        "original": "Greenhouse Dome",
+        "effect": "你每有 3 張果樹卡，獲得 2 分。"
+      },
+      "amount": 1,
+      "isHidden": false,
+      "folder": "第三期 Tier III"
+    },
+    {
+      "id": "7052c5a9-9714-4c4c-821b-77afc04d6b27",
+      "name": "自動採收機 Auto-Picker",
+      "cardTemplateId": "3ed8f7ff-0253-4d80-8d67-fbc3231dcf70",
+      "attributes": {
+        "trigger": "收成",
+        "code": "CO-301",
+        "title": "自動採收機",
+        "original": "Auto-Picker",
+        "effect": "此卡每有 1 張相鄰卡片，獲得 1 個任意水果。"
+      },
+      "amount": 1,
+      "isHidden": false,
+      "folder": "第三期 Tier III"
+    },
+    {
+      "id": "ffac356c-d0a3-450a-b6bb-7a66572be4fd",
+      "name": "夜間巡守機 Night Warden",
+      "cardTemplateId": "3ed8f7ff-0253-4d80-8d67-fbc3231dcf70",
+      "attributes": {
+        "trigger": "持續",
+        "code": "CO-203",
+        "title": "夜間巡守機",
+        "original": "Night Warden",
+        "effect": "其他玩家的效果無法拿取你果園中的資源。"
+      },
+      "amount": 1,
+      "isHidden": false,
+      "folder": "第二期 Tier II"
+    },
+    {
+      "id": "31764f0e-50ea-4616-9cde-852b3a17f831",
+      "name": "嫁接工具組 Grafting Kit",
+      "cardTemplateId": "3ed8f7ff-0253-4d80-8d67-fbc3231dcf70",
+      "attributes": {
+        "trigger": "立即",
+        "code": "CO-204",
+        "title": "嫁接工具組",
+        "original": "Grafting Kit",
+        "effect": "將 1 張果樹卡疊在此卡下方；此卡視為具有該卡的收成能力。"
+      },
+      "amount": 1,
+      "isHidden": false,
+      "folder": "第二期 Tier II"
+    },
+    {
+      "id": "fdb6b7c3-e50f-4214-9219-d0c0e8545d35",
+      "name": "黃銅蜜蜂 Brass Bees",
+      "cardTemplateId": "3ed8f7ff-0253-4d80-8d67-fbc3231dcf70",
+      "attributes": {
+        "trigger": "收成",
+        "code": "CO-201",
+        "title": "黃銅蜜蜂",
+        "original": "Brass Bees",
+        "effect": "選擇 1 張相鄰的果樹卡，再次執行它的收成能力。"
+      },
+      "amount": 2,
+      "isHidden": false,
+      "folder": "第二期 Tier II"
+    },
+    {
+      "id": "3a3ecba9-8fff-4fac-af9f-85cb5900dc50",
+      "name": "齒輪磨坊 Cog Mill",
+      "cardTemplateId": "3ed8f7ff-0253-4d80-8d67-fbc3231dcf70",
+      "attributes": {
+        "trigger": "收成",
+        "code": "CO-202",
+        "title": "齒輪磨坊",
+        "original": "Cog Mill",
+        "effect": "你可以將 2 蘋果換成 1 蘋果酒。"
+      },
+      "amount": 2,
+      "isHidden": false,
+      "folder": "第二期 Tier II"
+    }
+  ]
+}

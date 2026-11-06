@@ -1,11 +1,8 @@
-main {
-  font-family: "Noto Sans TC", sans-serif;
-}
-
 #page-screen > .page,
 #page-print {
   background-color: white;
   color: black;
+  font-family: "Noto Sans TC", sans-serif;
 
   > div {
     display: inline-block;
