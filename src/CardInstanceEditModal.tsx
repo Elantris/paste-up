@@ -92,8 +92,8 @@ const CardInstanceEditForm: FC<CardInstanceEditFormProps> = ({
       return
     }
 
-    const name = nameRef.current?.value.trim().replace(/\s+/, " ") || ""
-    const folder = folderRef.current?.value.trim().replace(/\s+/, " ") || ""
+    const name = nameRef.current?.value.trim().replace(/\s+/g, " ") || ""
+    const folder = folderRef.current?.value.trim().replace(/\s+/g, " ") || ""
     const cardTemplateId = cardTemplateIdRef.current?.value || ""
     const amount = Number(amountRef.current?.value || 0)
     if (!name) {
